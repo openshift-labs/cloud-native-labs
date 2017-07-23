@@ -22,6 +22,6 @@ import javax.ws.rs.core.Application;
 /**
  * @author Heiko Braun
  */
-@ApplicationPath("/api")
+@ApplicationPath("/")
 public class InventoryApplication extends Application {
 }

@@ -20,7 +20,7 @@ public class InventoryResource {
     private EntityManager em;
 
     @GET
-    @Path("/inventory/{itemId}")
+    @Path("/api/inventory/{itemId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Inventory getAvailability(@PathParam("itemId") String itemId) {
         return em.find(Inventory.class, itemId);

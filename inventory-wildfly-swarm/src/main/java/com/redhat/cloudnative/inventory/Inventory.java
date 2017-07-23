@@ -9,7 +9,9 @@ import java.io.Serializable;
 @Entity
 @Table(name = "INVENTORY", uniqueConstraints = @UniqueConstraint(columnNames = "itemId"))
 public class Inventory implements Serializable {
-    @Id
+	private static final long serialVersionUID = -8053933344541613739L;
+
+	@Id
     private String itemId;
 
     private int quantity;
@@ -35,9 +37,9 @@ public class Inventory implements Serializable {
 
     @Override
     public String toString() {
-        return "Inventory{" +
+        return "Inventory [" +
                 "itemId='" + itemId + '\'' +
                 ", quantity=" + quantity +
-                '}';
+                ']';
     }
 }
