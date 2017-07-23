@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package io.openshift.boosters;
+package com.redhat.cloudnative.inventory;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -23,5 +23,5 @@ import javax.ws.rs.core.Application;
  * @author Heiko Braun
  */
 @ApplicationPath("/api")
-public class RestApplication extends Application {
+public class InventoryApplication extends Application {
 }
