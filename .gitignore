@@ -4,3 +4,8 @@ target/
 *.class
 tmp/
 .idea/
+.openshiftio
+.settings/
+.classpath
+.project
+.DS_Store
