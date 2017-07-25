@@ -10,8 +10,6 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(name = "PRODUCT", uniqueConstraints = @UniqueConstraint(columnNames = "itemId"))
 public class Product implements Serializable {
-
-	private static final long serialVersionUID = 5211376365052633782L;
 	
 	@Id
 	private String itemId;
