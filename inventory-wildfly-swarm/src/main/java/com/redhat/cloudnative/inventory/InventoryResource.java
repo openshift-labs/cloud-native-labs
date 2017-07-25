@@ -24,14 +24,4 @@ public class InventoryResource {
     public Inventory getAvailability(@PathParam("itemId") String itemId) {
         return em.find(Inventory.class, itemId);
     }
-
-    @GET
-    @Path("/health")
-    @Health
-    public HealthStatus health() {
-        return HealthStatus
-                .named("Inventory Health")
-                .up()
-                .withAttribute("date", new Date().toString());
-    }
 }
