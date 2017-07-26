@@ -1,4 +1,5 @@
 {
-  "http.port": 9000,
-  "endpoint.catalog": "http://localhost:8080"
+  "http.port": 8080,
+  "catalog.url": "http://127.0.0.1:8081",
+  "inventory.url": "http://127.0.0.1:8082"
 }
