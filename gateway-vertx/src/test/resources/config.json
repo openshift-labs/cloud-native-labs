@@ -1,0 +1,4 @@
+{
+  "http.port": 9000,
+  "endpoint.catalog": "http://localhost:8080"
+}
