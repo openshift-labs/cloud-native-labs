@@ -1,18 +1,17 @@
 package com.redhat.cloudnative.gateway;
 
-import io.vertx.core.*;
-import io.vertx.core.buffer.Buffer;
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.CompositeFuture;
+import io.vertx.core.Future;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-//import io.vertx.ext.web.client.HttpResponse;
-//import io.vertx.ext.web.client.WebClient;
-//import rx.Single;
 
-import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class GatewayVerticle extends AbstractVerticle {
     private HttpClient client;
@@ -43,15 +42,36 @@ public class GatewayVerticle extends AbstractVerticle {
         client.getAbs(catalogUrl + "/api/catalog", response -> {
             if (response.statusCode() == 200) {
                 response.bodyHandler(productBuff -> {
+                    //rc.response().end(buff);
                     JsonArray products = new JsonArray(productBuff);
-                    // for each product, retrieve inventory
-                    // client.getAbs(inventoryUrl + "/api/inventory/33243", response -> {}
+                    List<Future> inventory = products.stream()
+                            .map(product -> inventory((JsonObject)product))
+                            .collect(Collectors.toList());
 
-                    rc.response().end(Json.encodePrettily(products));
+                    CompositeFuture.join(inventory).setHandler(ar -> {
+                        rc.response().end(Json.encodePrettily(products));
+                    });
                 });
             } else {
                 rc.response().end("{\"error\": \"Catalog service failed: r" + response.statusMessage() + "\"}");
             }
         }).end();
+    }
+
+    private Future<Void> inventory(JsonObject product) {
+        Future future = Future.future();
+
+        client.getAbs(inventoryUrl + "/api/inventory/" + product.getString("itemId"), response -> {
+            if (response.statusCode() == 200) {
+                response.bodyHandler(buff -> {
+                    product.put("quantity", new JsonObject(buff).getInteger("quantity"));
+                    future.complete();
+                });
+            } else {
+                future.fail(response.statusMessage());
+            }
+        }).end();
+
+        return future;
     }
 }
