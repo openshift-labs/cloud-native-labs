@@ -1,15 +1,16 @@
 package com.redhat.cloudnative.gateway;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.CompositeFuture;
-import io.vertx.core.Future;
+import io.vertx.core.*;
 import io.vertx.core.http.HttpClient;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.CorsHandler;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,13 +19,31 @@ public class GatewayVerticle extends AbstractVerticle {
     private String inventoryUrl, catalogUrl;
 
     @Override
-    public void start(Future<Void> future) {
+    public void init(Vertx vertx, Context context) {
+        super.init(vertx, context);
+
         inventoryUrl = config().getString("inventory.url", "http://inventory:8080");
         catalogUrl = config().getString("catalog.url", "http://catalog:8080");
         client = vertx.createHttpClient();
+    }
+
+    @Override
+    public void start(Future<Void> future) {
         Router router = Router.router(vertx);
 
+        router.route().handler(CorsHandler.create("*").allowedMethod(HttpMethod.GET));
+
         router.get("/health").handler(ctx -> ctx.response().end(new JsonObject().put("status", "UP").toString()));
+        router.get("/api/cart/*").handler(ctx -> ctx.response().end(
+            new JsonObject()
+                    .put("cartItemTotal", 0)
+                    .put("cartItemPromoSavings", 0)
+                    .put("shippingTotal", 0)
+                    .put("shippingPromoSavings", 0)
+                    .put("cartTotal", 0)
+                    .put("shoppingCartItemList", Collections.emptyList())
+                    .toString()));
+
         router.get("/api/products").handler(this::products);
 
         vertx.createHttpServer()
@@ -53,7 +72,8 @@ public class GatewayVerticle extends AbstractVerticle {
                     });
                 });
             } else {
-                rc.response().end("{\"error\": \"Catalog service failed: r" + response.statusMessage() + "\"}");
+                rc.response().end(new JsonObject().put("error", 
+                        "Catalog service failed: " + response.statusMessage()).toString());
             }
         }).end();
     }
