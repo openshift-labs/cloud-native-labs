@@ -34,16 +34,6 @@ public class GatewayVerticle extends AbstractVerticle {
         router.route().handler(CorsHandler.create("*").allowedMethod(HttpMethod.GET));
 
         router.get("/health").handler(ctx -> ctx.response().end(new JsonObject().put("status", "UP").toString()));
-        router.get("/api/cart/*").handler(ctx -> ctx.response().end(
-            new JsonObject()
-                    .put("cartItemTotal", 0)
-                    .put("cartItemPromoSavings", 0)
-                    .put("shippingTotal", 0)
-                    .put("shippingPromoSavings", 0)
-                    .put("cartTotal", 0)
-                    .put("shoppingCartItemList", Collections.emptyList())
-                    .toString()));
-
         router.get("/api/products").handler(this::products);
 
         vertx.createHttpServer()
@@ -61,7 +51,6 @@ public class GatewayVerticle extends AbstractVerticle {
         client.getAbs(catalogUrl + "/api/catalog", response -> {
             if (response.statusCode() == 200) {
                 response.bodyHandler(productBuff -> {
-                    //rc.response().end(buff);
                     JsonArray products = new JsonArray(productBuff);
                     List<Future> inventory = products.stream()
                             .map(product -> inventory((JsonObject)product))
@@ -72,7 +61,7 @@ public class GatewayVerticle extends AbstractVerticle {
                     });
                 });
             } else {
-                rc.response().end(new JsonObject().put("error", 
+                rc.response().end(new JsonObject().put("error",
                         "Catalog service failed: " + response.statusMessage()).toString());
             }
         }).end();
