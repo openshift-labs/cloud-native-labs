@@ -1,0 +1,606 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: coolstore
+labels:
+  application: "coolstore" 
+parameters:
+- description: Git source URI for application
+  displayName: Git Repository
+  name: GIT_URI
+  required: true
+  value: https://github.com/siamaksade/cloud-native-labs.git
+- description: Git branch/tag reference
+  displayName: Git Branch/Tag
+  name: GIT_REF
+  required: true
+  value: master
+- description: Maven mirror url e.g. Artifactory or Nexus http://nexus.ci:8081/content/groups/public/
+  displayName: Maven Mirror URL
+  name: MAVEN_MIRROR_URL
+objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    labels:
+      component: catalog
+    name: catalog
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    labels:
+      component: gateway
+    name: gateway
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    labels:
+      component: inventory
+    name: inventory
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    labels:
+      component: web
+    name: web
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      component: catalog
+    name: catalog-s2i
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: catalog:latest
+    runPolicy: Serial
+    source:
+      contextDir: solutions/complete/catalog-spring-boot
+      git:
+        ref: ${GIT_REF}
+        uri: ${GIT_URI}
+      type: Git
+    strategy:
+      sourceStrategy:
+        env:
+        - name: MAVEN_MIRROR_URL
+          value: ${MAVEN_MIRROR_URL}
+        from:
+          kind: ImageStreamTag
+          name: redhat-openjdk18-openshift:1.1
+          namespace: openshift
+      type: Source
+    triggers:
+    - generic:
+        secret: 26f0d384fdab122b
+      type: Generic
+    - github:
+        secret: b3c6f1f04b70ee2a
+      type: GitHub
+    - imageChange:
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    name: gateway-s2i
+    labels:
+      component: gateway
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: gateway:latest
+    source:
+      contextDir: solutions/complete/gateway-vertx
+      git:
+        ref: ${GIT_REF}
+        uri: ${GIT_URI}
+      type: Git
+    strategy:
+      sourceStrategy:
+        env:
+        - name: MAVEN_MIRROR_URL
+          value: ${MAVEN_MIRROR_URL}
+        from:
+          kind: ImageStreamTag
+          namespace: openshift
+          name: redhat-openjdk18-openshift:1.0
+      type: Source
+    triggers:
+    - github:
+        secret: KyiqYOEkn7w2ETK_LAUL
+      type: GitHub
+    - generic:
+        secret: 9VB9eGj2Vvt1GJRiGBKq
+      type: Generic
+    - type: ConfigChange
+    - imageChange: {}
+      type: ImageChange
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      component: inventory
+    name: inventory-s2i
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: inventory:latest
+    source:
+      contextDir: solutions/complete/inventory-wildfly-swarm
+      git:
+        ref: ${GIT_REF}
+        uri: ${GIT_URI}
+      type: Git
+    strategy:
+      sourceStrategy:
+        env:
+        - name: MAVEN_MIRROR_URL
+          value: ${MAVEN_MIRROR_URL}
+        from:
+          kind: ImageStreamTag
+          namespace: openshift
+          name: redhat-openjdk18-openshift:1.0
+      type: Source
+    triggers:
+    - github:
+        secret: KyiqYOEkn7w2ETK_LAUL
+      type: GitHub
+    - generic:
+        secret: 9VB9eGj2Vvt1GJRiGBKq
+      type: Generic
+    - type: ConfigChange
+    - imageChange: {}
+      type: ImageChange
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      component: web
+    name: web-s2i
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: web:latest
+    source:
+      contextDir: solutions/complete/web-nodejs
+      git:
+        ref: ${GIT_REF}
+        uri: ${GIT_URI}
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: nodejs:4
+          namespace: openshift
+      type: Source
+    triggers:
+    - github:
+        secret: KyiqYOEkn7w2ETK_LAUL
+      type: GitHub
+    - generic:
+        secret: 9VB9eGj2Vvt1GJRiGBKq
+      type: Generic
+    - type: ConfigChange
+    - imageChange: {}
+      type: ImageChange
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      component: catalog
+    name: catalog
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: catalog
+      component: catalog
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          component: catalog
+          deploymentconfig: catalog
+      spec:
+        containers:
+        - image: catalog
+          imagePullPolicy: Always
+          name: catalog
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+            name: http
+          - containerPort: 8787
+            protocol: TCP
+            name: jolokia
+          terminationMessagePath: /dev/termination-log
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 180
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        terminationGracePeriodSeconds: 30
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - catalog
+        from:
+          kind: ImageStreamTag
+          name: catalog:latest
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      component: gateway
+    name: gateway
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: gateway
+      component: gateway
+    strategy:
+      activeDeadlineSeconds: 21600
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 3600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          deploymentconfig: gateway
+          component: gateway
+      spec:
+        containers:
+        - env:
+          - name: KUBERNETES_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          - name: JAVA_OPTIONS
+            value: -Dvertx.cacheDirBase=/tmp
+          image: gateway
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 180
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: gateway
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 8787
+            name: jolokia
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          terminationMessagePath: /dev/termination-log
+        restartPolicy: Always
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - gateway
+        from:
+          kind: ImageStreamTag
+          name: gateway:latest
+      type: ImageChange
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      component: inventory
+    name: inventory
+  spec:
+    replicas: 1
+    selector:
+      component: inventory
+      deploymentconfig: inventory
+    strategy:
+      activeDeadlineSeconds: 21600
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 3600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          component: inventory
+          deploymentconfig: inventory
+      spec:
+        containers:
+        - env:
+          - name: KUBERNETES_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          - name: AB_JOLOKIA_OFF
+            value: "true"
+          image: inventory
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 180
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: inventory
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+            name: http
+          - containerPort: 8787
+            protocol: TCP
+            name: jolokia
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          terminationMessagePath: /dev/termination-log
+        restartPolicy: Always
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - inventory
+        from:
+          kind: ImageStreamTag
+          name: inventory:latest
+      type: ImageChange
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      component: web
+    name: web
+  spec:
+    replicas: 1
+    selector:
+      component: web
+      deploymentconfig: web
+    strategy:
+      activeDeadlineSeconds: 21600
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          component: web
+          deploymentconfig: web
+      spec:
+        containers:
+        - env:
+          - name: COOLSTORE_GW_SERVICE
+            value: gateway
+          image: web
+          imagePullPolicy: Always
+          name: web
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          terminationMessagePath: /dev/termination-log
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 180
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - web
+        from:
+          kind: ImageStreamTag
+          name: web:latest
+      type: ImageChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: catalog
+      component: catalog
+    name: catalog
+  spec:
+    ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      component: catalog
+      deploymentconfig: catalog
+    type: ClusterIP
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: gateway
+      component: gateway
+    name: gateway
+  spec:
+    ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      component: gateway
+      deploymentconfig: gateway
+    type: ClusterIP
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: inventory
+      component: inventory
+    name: inventory
+  spec:
+    ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      component: inventory
+      deploymentconfig: inventory
+    type: ClusterIP
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: web
+      component: web
+    name: web
+  spec:
+    ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      component: web
+      deploymentconfig: web
+    type: ClusterIP
+- apiVersion: v1
+  kind: Route
+  metadata:
+    labels:
+      component: catalog
+    name: catalog
+  spec:
+    port:
+      targetPort: 8080
+    to:
+      kind: Service
+      name: catalog
+      weight: 100
+- apiVersion: v1
+  kind: Route
+  metadata:
+    labels:
+      component: inventory
+    name: inventory
+  spec:
+    port:
+      targetPort: 8080
+    to:
+      kind: Service
+      name: inventory
+      weight: 100
+- apiVersion: v1
+  kind: Route
+  metadata:
+    labels:
+      component: gateway
+    name: gateway
+  spec:
+    port:
+      targetPort: 8080
+    to:
+      kind: Service
+      name: gateway
+      weight: 100
+- apiVersion: v1
+  kind: Route
+  metadata:
+    labels:
+      component: web
+    name: web
+  spec:
+    port:
+      targetPort: 8080
+    to:
+      kind: Service
+      name: web
+      weight: 100
