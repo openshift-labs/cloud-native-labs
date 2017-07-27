@@ -84,7 +84,8 @@ public class GatewayVerticle extends AbstractVerticle {
         client.getAbs(inventoryUrl + "/api/inventory/" + product.getString("itemId"), response -> {
             if (response.statusCode() == 200) {
                 response.bodyHandler(buff -> {
-                    product.put("quantity", new JsonObject(buff).getInteger("quantity"));
+                    JsonObject availability = new JsonObject().put("quantity", new JsonObject(buff).getInteger("quantity"));
+                    product.put("availability", availability);
                     future.complete();
                 });
             } else {
