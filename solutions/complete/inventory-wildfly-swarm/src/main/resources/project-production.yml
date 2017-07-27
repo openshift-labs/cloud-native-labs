@@ -1,9 +1,0 @@
-
-swarm:
-  datasources:
-    data-sources:
-      MyDS:
-        driver-name: postgresql
-        connection-url: jdbc:postgresql://inventory-database:5432/inventory
-        user-name: inventory
-        password: inventory
