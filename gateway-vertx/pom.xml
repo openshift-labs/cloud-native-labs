@@ -15,6 +15,8 @@
         <vertx.version>3.4.2</vertx.version>
         <vertx-maven-plugin.version>1.0.8</vertx-maven-plugin.version>
         <vertx.verticle>com.redhat.cloudnative.gateway.GatewayVerticle</vertx.verticle>
+        <fabric8.maven.plugin.version>3.5.1</fabric8.maven.plugin.version>
+
     </properties>
 
     <dependencyManagement>
@@ -72,6 +74,39 @@
                     <redeploy>true</redeploy>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>fabric8-maven-plugin</artifactId>
+                <version>${fabric8.maven.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>fmp</id>
+                        <goals>
+                            <goal>resource</goal>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <generator>
+                        <includes>
+                            <include>vertx</include>
+                        </includes>
+                        <config>
+                            <vertx>
+                                <from>redhat-openjdk-18/openjdk18-openshift</from>
+                            </vertx>
+                        </config>
+                    </generator>
+                    <enricher>
+                        <config>
+                            <vertx-health-check>
+                                <path>/health</path>
+                            </vertx-health-check>
+                        </config>
+                    </enricher>
+                </configuration>
+            </plugin>
         </plugins>
 
         <pluginManagement>
@@ -103,56 +138,4 @@
             </plugins>
         </pluginManagement>
     </build>
-
-    <profiles>
-        <profile>
-            <id>openshift</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>io.fabric8</groupId>
-                        <artifactId>fabric8-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>fmp</id>
-                                <goals>
-                                    <goal>resource</goal>
-                                    <goal>build</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <enricher>
-                                <config>
-                                    <vertx-health-check>
-                                        <path>/</path>
-                                    </vertx-health-check>
-                                </config>
-                            </enricher>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <id>openshift-it</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>integration-test</goal>
-                                    <goal>verify</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

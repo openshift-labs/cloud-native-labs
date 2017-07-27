@@ -118,6 +118,13 @@
                     </spring-boot>
                   </config>
               </generator>
+              <enricher>
+                <config>
+                  <spring-boot-health-check>
+                    <path>/health</path>
+                  </spring-boot-health-check>
+                </config>
+              </enricher>
           </configuration>
       </plugin>
     </plugins>

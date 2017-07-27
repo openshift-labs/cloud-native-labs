@@ -125,6 +125,13 @@
                     </wildfly-swarm>
                   </config>
               </generator>
+              <enricher>
+                  <config>
+                      <wildfly-swarm-health-check>
+                          <path>/health</path>
+                      </wildfly-swarm-health-check>
+                  </config>
+              </enricher>
           </configuration>
       </plugin>
     </plugins>
