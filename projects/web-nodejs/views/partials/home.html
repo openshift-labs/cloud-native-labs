@@ -12,7 +12,6 @@
 
                     <div>
                         <span><h1>{{item.product.price | currency}}</h1></span>
-                        <h1>{{item.product}}</h1>
                         <div ng-if="item.product.availability.quantity > 0" style="float:right"><label title="{{item.product.availability.quantity}} in our store in {{item.product.availability.location}}" class="label label-{{item.product.availability.quantity < 15 ? 'warning' : 'primary'}}">{{item.product.availability.quantity}} left!</label>
                             <a target="_blank" href="{{item.product.availability.link}}">&nbsp;<span class="fa fa-map-marker fa-lg"></span></a>
                         </div>
