@@ -70,6 +70,16 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <version>${spring-boot.version}</version>
+        <executions>
+            <execution>
+                <goals>
+                    <goal>repackage</goal>
+                </goals>
+            </execution>
+        </executions>
+        <configuration>
+            <jvmArguments>-Djava.net.preferIPv4Stack=true -Dserver.port=9000</jvmArguments>
+        </configuration>
       </plugin>
       <plugin>
           <groupId>io.fabric8</groupId>
@@ -93,13 +103,6 @@
                     </spring-boot>
                   </config>
               </generator>
-              <enricher>
-                <config>
-                  <spring-boot-health-check>
-                    <path>/health</path>
-                  </spring-boot-health-check>
-                </config>
-              </enricher>
           </configuration>
       </plugin>
     </plugins>

@@ -14,11 +14,10 @@ public class GatewayVerticle extends AbstractVerticle {
 
     @Override
     public void start(Future<Void> future) {
-        client = vertx.createHttpClient();
+        client = vertx.createHttpClient(new HttpClientOptions().setLogActivity(true));
 
         Router router = Router.router(vertx);
         router.route().handler(CorsHandler.create("*").allowedMethod(HttpMethod.GET));
-        router.get("/health").handler(ctx -> ctx.response().end(new JsonObject().put("status", "UP").toString()));
         router.get("/api/products").handler(this::products);
 
         vertx.createHttpServer()

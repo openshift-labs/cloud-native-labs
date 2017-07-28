@@ -10,7 +10,7 @@ public class GatewayVerticle extends AbstractVerticle {
         Router router = Router.router(vertx);
 
         router.get("/*").handler(rc -> {
-            rc.response().end("{\"message\": \"Hello World\"}");
+            rc.response().end("{\"message\": \"Hello Vert.x\"}");
         });
 
         vertx.createHttpServer().requestHandler(router::accept).listen(8080);

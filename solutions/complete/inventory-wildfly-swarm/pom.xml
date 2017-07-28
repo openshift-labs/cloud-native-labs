@@ -102,6 +102,9 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <jvmArguments>-Dswarm.http.port=9001</jvmArguments>
+        </configuration>
       </plugin>
       <plugin>
           <groupId>io.fabric8</groupId>
