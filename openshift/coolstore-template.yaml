@@ -167,7 +167,7 @@ objects:
         kind: ImageStreamTag
         name: web:latest
     source:
-      contextDir: solutions/complete/web-nodejs
+      contextDir: projects/web-nodejs
       git:
         ref: ${GIT_REF}
         uri: ${GIT_URI}
