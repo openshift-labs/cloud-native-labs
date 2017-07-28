@@ -40,10 +40,6 @@
             <groupId>io.vertx</groupId>
             <artifactId>vertx-web</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-rx-java</artifactId>
-        </dependency>
     </dependencies>
 
     <build>
@@ -74,68 +70,6 @@
                     <redeploy>true</redeploy>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>io.fabric8</groupId>
-                <artifactId>fabric8-maven-plugin</artifactId>
-                <version>${fabric8.maven.plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>fmp</id>
-                        <goals>
-                            <goal>resource</goal>
-                            <goal>build</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <generator>
-                        <includes>
-                            <include>vertx</include>
-                        </includes>
-                        <config>
-                            <vertx>
-                                <from>redhat-openjdk-18/openjdk18-openshift</from>
-                            </vertx>
-                        </config>
-                    </generator>
-                    <enricher>
-                        <config>
-                            <vertx-health-check>
-                                <path>/health</path>
-                            </vertx-health-check>
-                        </config>
-                    </enricher>
-                </configuration>
-            </plugin>
         </plugins>
-
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>io.fabric8</groupId>
-                                        <artifactId>vertx-maven-plugin</artifactId>
-                                        <versionRange>[1.0.6,)</versionRange>
-                                        <goals>
-                                            <goal>initialize</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore/>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
 </project>

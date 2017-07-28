@@ -61,8 +61,7 @@ public class GatewayVerticle extends AbstractVerticle {
                     });
                 });
             } else {
-                rc.response().end(new JsonObject().put("error",
-                        "Catalog service failed: " + response.statusMessage()).toString());
+                rc.response().end(new JsonObject().put("error", "Catalog service failed: " + response.statusMessage()).toString());
             }
         }).end();
     }
