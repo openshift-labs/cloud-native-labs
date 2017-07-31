@@ -53,7 +53,7 @@ public class GatewayVerticle extends AbstractVerticle {
 
     private Future<Void> inventory(JsonObject product) {
         Future future = Future.future();
-        String baseUrl = config().getString("catalog.url", "http://catalog:8080") + "/api/inventory/";
+        String baseUrl = config().getString("inventory.url", "http://inventory:8080") + "/api/inventory/";
         client.getAbs(baseUrl + product.getString("itemId"), resp -> {
             if (resp.statusCode() == 200) {
                 resp.bodyHandler(buff -> {
