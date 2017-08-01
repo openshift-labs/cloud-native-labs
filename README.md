@@ -3,3 +3,38 @@
 This is a one-day hands-on lab experience for bulding Cloud Native applications using 
 Red Hat OpenShift Application Runtimes (Spring Boot, WildFly Swarm, Eclipse Vert.x and Node.js) 
 utilizing a microservices architecture.
+
+
+## CoolStore Online Store App
+
+CoolStore is an online store web application built using Spring Boot, WildFly Swarm, Eclipse Vert.x, 
+Node.js and AngularJS adopting the microservices architecture.
+
+```
+                    +-------------+
+                    |             |
+                    |     Web     |
+                    |             |
+                    |   Node.js   |
+                    |  AngularJS  |
+                    +------+------+
+                          |
+                          v
+                    +------+------+
+                    |             |
+                    | API Gateway |
+                    |             |
+                    |   Vert.x    |
+                    |             |
+                    +------+------+
+                          |
+                +---------+---------+
+                v                   v
+          +------+------+     +------+------+
+          |             |     |             |
+          |   Catalog   |     |  Inventory  |
+          |             |     |             |
+          | Spring Boot |     |WildFly Swarm|
+          |             |     |             |
+          +-------------+     +-------------+
+```
