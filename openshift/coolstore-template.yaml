@@ -106,7 +106,7 @@ objects:
         from:
           kind: ImageStreamTag
           namespace: openshift
-          name: redhat-openjdk18-openshift:1.0
+          name: redhat-openjdk18-openshift:1.1
       type: Source
     triggers:
     - github:
@@ -143,7 +143,7 @@ objects:
         from:
           kind: ImageStreamTag
           namespace: openshift
-          name: redhat-openjdk18-openshift:1.0
+          name: redhat-openjdk18-openshift:1.1
       type: Source
     triggers:
     - github:
