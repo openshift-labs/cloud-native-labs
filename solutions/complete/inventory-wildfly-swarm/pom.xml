@@ -11,7 +11,7 @@
   <description>CoolStore Inventory Service with WildFly Swarm</description>
 
   <properties>
-    <version.wildfly.swarm>2017.7.0</version.wildfly.swarm>
+    <version.wildfly.swarm>2017.8.1</version.wildfly.swarm>
     <fabric8.version>2.2.205</fabric8.version>
     <fabric8.maven.plugin.version>3.5.21</fabric8.maven.plugin.version>
     <h2.version>1.4.187</h2.version>
@@ -53,6 +53,11 @@
     <dependency>
       <groupId>org.wildfly.swarm</groupId>
       <artifactId>jpa</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wildfly.swarm</groupId>
+      <artifactId>jolokia</artifactId>
     </dependency>
 
     <dependency>
