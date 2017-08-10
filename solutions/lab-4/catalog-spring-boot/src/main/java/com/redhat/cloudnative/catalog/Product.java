@@ -16,7 +16,7 @@ public class Product implements Serializable {
 	
 	private String name;
 	
-	private String desc;
+	private String description;
 	
 	private double price;
 
@@ -39,12 +39,12 @@ public class Product implements Serializable {
 		this.name = name;
 	}
 
-	public String getDesc() {
-		return desc;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setDesc(String desc) {
-		this.desc = desc;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public double getPrice() {
@@ -59,4 +59,5 @@ public class Product implements Serializable {
 	public String toString() {
 		return "Product [itemId=" + itemId + ", name=" + name + ", price=" + price + "]";
 	}
+}
 }

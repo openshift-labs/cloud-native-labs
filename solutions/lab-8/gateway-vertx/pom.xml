@@ -76,11 +76,10 @@
                 <version>${fabric8.maven.plugin.version}</version>
                 <executions>
                     <execution>
-                        <id>fmp</id>
-                        <goals>
-                            <goal>resource</goal>
-                            <goal>build</goal>
-                        </goals>
+                    <goals>
+                        <goal>resource</goal>
+                        <goal>build</goal>
+                    </goals>
                     </execution>
                 </executions>
                 <configuration>

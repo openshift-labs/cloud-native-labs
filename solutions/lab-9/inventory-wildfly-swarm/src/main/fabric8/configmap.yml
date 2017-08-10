@@ -1,0 +1,14 @@
+metadata:
+  name: inventory
+data:
+  project-stages.yml: |
+    project:
+      stage: prod
+    swarm:
+      datasources:
+        data-sources:
+          InventoryDS:
+            driver-name: postgresql
+            connection-url: jdbc:postgresql://inventory-postgresql:5432/inventory
+            user-name: inventory
+            password: inventory

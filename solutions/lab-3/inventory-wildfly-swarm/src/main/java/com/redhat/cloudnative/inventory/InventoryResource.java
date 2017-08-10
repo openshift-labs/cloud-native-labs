@@ -15,7 +15,7 @@ import java.util.Date;
 @Path("/")
 @ApplicationScoped
 public class InventoryResource {
-    @PersistenceContext(unitName = "MyPU")
+    @PersistenceContext(unitName = "InventoryPU")
     private EntityManager em;
 
     @GET
