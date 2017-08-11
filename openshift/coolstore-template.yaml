@@ -194,6 +194,7 @@ objects:
   metadata:
     labels:
       component: catalog
+      app: catalog
     name: catalog
   spec:
     replicas: 1
@@ -266,6 +267,7 @@ objects:
   metadata:
     labels:
       component: gateway
+      app: gateway
     name: gateway
   spec:
     replicas: 1
@@ -343,6 +345,7 @@ objects:
   metadata:
     labels:
       component: inventory
+      app: inventory
     name: inventory
   spec:
     replicas: 1
@@ -373,6 +376,8 @@ objects:
                 fieldPath: metadata.namespace
           - name: AB_JOLOKIA_OFF
             value: "true"
+          - name: JAVA_OPTIONS
+            value: "-Dswarm.project.stage=prod -Dswarm.project.stage.file=file:///app/config/project-stages.yml"
           image: inventory
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -404,7 +409,17 @@ objects:
             successThreshold: 1
             timeoutSeconds: 1
           terminationMessagePath: /dev/termination-log
+          volumeMounts:
+            - name: config
+              mountPath: /app/config
         restartPolicy: Always
+        volumes:
+          - configMap:
+              name: inventory
+              items:
+              - key: "project-stages.yml"
+                path: "project-stages.yml"
+            name: config
     triggers:
     - type: ConfigChange
     - imageChangeParams:
@@ -420,6 +435,7 @@ objects:
   metadata:
     labels:
       component: web
+      app: web
     name: web
   spec:
     replicas: 1
@@ -604,3 +620,241 @@ objects:
       kind: Service
       name: web
       weight: 100
+- apiVersion: v1
+  kind: RoleBinding
+  metadata:
+    name: view
+  roleRef:
+    name: view
+  subjects:
+  - kind: ServiceAccount
+    name: default
+- apiVersion: v1
+  data:
+    application.properties: |-
+      spring.datasource.url=jdbc:postgresql://catalog-postgresql:5432/catalog
+      spring.datasource.username=catalog
+      spring.datasource.password=catalog
+      spring.datasource.driver-class-name=org.postgresql.Driver
+      spring.jpa.hibernate.ddl-auto=create
+  kind: ConfigMap
+  metadata:
+    name: catalog
+    labels:
+      component: catalog
+- apiVersion: v1
+  data:
+    project-stages.yml: |-
+      project:
+        stage: prod
+      swarm:
+        datasources:
+          data-sources:
+            InventoryDS:
+              driver-name: postgresql
+              connection-url: jdbc:postgresql://inventory-postgresql:5432/inventory
+              user-name: inventory
+              password: inventory
+  kind: ConfigMap
+  metadata:
+    name: inventory
+    labels:
+      component: inventory
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: inventory-postgresql
+      component: inventory
+    name: inventory-postgresql
+  spec:
+    replicas: 1
+    selector:
+      name: inventory-postgresql
+    strategy:
+      activeDeadlineSeconds: 21600
+      recreateParams:
+        timeoutSeconds: 600
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          app: inventory-postgresql
+          name: inventory-postgresql
+      spec:
+        containers:
+        - env:
+          - name: POSTGRESQL_USER
+            value: inventory
+          - name: POSTGRESQL_PASSWORD
+            value: inventory
+          - name: POSTGRESQL_DATABASE
+            value: inventory
+          image: postgresql
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 5432
+            timeoutSeconds: 1
+          name: postgresql
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -i
+              - -c
+              - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c
+                'SELECT 1'
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: inventory-postgresql-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - emptyDir: {}
+          name: inventory-postgresql-data
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - postgresql
+        from:
+          kind: ImageStreamTag
+          name: postgresql:9.5
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: inventory-postgresql
+      component: inventory
+    name: inventory-postgresql
+  spec:
+    ports:
+    - port: 5432
+      protocol: TCP
+      targetPort: 5432
+    selector:
+      app: inventory-postgresql
+      deploymentconfig: inventory-postgresql
+    type: ClusterIP
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: catalog-postgresql
+      component: catalog
+    name: catalog-postgresql
+  spec:
+    replicas: 1
+    selector:
+      name: catalog-postgresql
+    strategy:
+      activeDeadlineSeconds: 21600
+      recreateParams:
+        timeoutSeconds: 600
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          app: catalog-postgresql
+          name: catalog-postgresql
+      spec:
+        containers:
+        - env:
+          - name: POSTGRESQL_USER
+            value: catalog
+          - name: POSTGRESQL_PASSWORD
+            value: catalog
+          - name: POSTGRESQL_DATABASE
+            value: catalog
+          image: postgresql
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 5432
+            timeoutSeconds: 1
+          name: postgresql
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -i
+              - -c
+              - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c
+                'SELECT 1'
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: catalog-postgresql-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - emptyDir: {}
+          name: catalog-postgresql-data
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - postgresql
+        from:
+          kind: ImageStreamTag
+          name: postgresql:9.5
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: catalog-postgresql
+      component: catalog
+    name: catalog-postgresql
+  spec:
+    ports:
+    - port: 5432
+      protocol: TCP
+      targetPort: 5432
+    selector:
+      app: catalog-postgresql
+      deploymentconfig: catalog-postgresql
+    type: ClusterIP

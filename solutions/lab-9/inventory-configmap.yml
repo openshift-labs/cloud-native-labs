@@ -1,7 +1,6 @@
-metadata:
-  name: inventory
+apiVersion: v1
 data:
-  project-stages.yml: |
+  project-stages.yml: |-
     project:
       stage: prod
     swarm:
@@ -12,3 +11,8 @@ data:
             connection-url: jdbc:postgresql://inventory-postgresql:5432/inventory
             user-name: inventory
             password: inventory
+kind: ConfigMap
+metadata:
+  name: inventory
+  labels:
+    component: inventory

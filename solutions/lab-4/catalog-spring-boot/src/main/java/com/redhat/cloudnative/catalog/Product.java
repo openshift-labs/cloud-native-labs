@@ -60,4 +60,3 @@ public class Product implements Serializable {
 		return "Product [itemId=" + itemId + ", name=" + name + ", price=" + price + "]";
 	}
 }
-}
