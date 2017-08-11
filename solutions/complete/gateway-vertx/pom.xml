@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project 
+    xmlns="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>com.redhat.cloudnative</groupId>
     <artifactId>gateway</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-
     <name>CoolStore Gateway Service</name>
     <description>CoolStore Gateway Service with Eclipse Vert.x</description>
-
     <properties>
         <vertx.version>3.4.2</vertx.version>
         <vertx-maven-plugin.version>1.0.8</vertx-maven-plugin.version>
         <vertx.verticle>com.redhat.cloudnative.gateway.GatewayVerticle</vertx.verticle>
         <fabric8.maven.plugin.version>3.5.21</fabric8.maven.plugin.version>
-
     </properties>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -30,7 +26,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
     <dependencies>
         <dependency>
             <groupId>io.vertx</groupId>
@@ -45,7 +40,6 @@
             <artifactId>vertx-circuit-breaker</artifactId>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -80,10 +74,10 @@
                 <version>${fabric8.maven.plugin.version}</version>
                 <executions>
                     <execution>
-                    <goals>
-                        <goal>resource</goal>
-                        <goal>build</goal>
-                    </goals>
+                        <goals>
+                            <goal>resource</goal>
+                            <goal>build</goal>
+                        </goals>
                     </execution>
                 </executions>
                 <configuration>

@@ -11,8 +11,8 @@
   <description>CoolStore Inventory Service with WildFly Swarm</description>
 
   <properties>
-    <version.wildfly.swarm>2017.7.0</version.wildfly.swarm>
-    <fabric8.version>3.5.22</fabric8.version>
+    <version.wildfly.swarm>2017.8.1</version.wildfly.swarm>
+    <fabric8.version>2.3.4</fabric8.version>
     <fabric8.maven.plugin.version>3.5.21</fabric8.maven.plugin.version>
     <h2.version>1.4.187</h2.version>
     <postgresql.version>9.4.1207</postgresql.version>
@@ -103,6 +103,9 @@
           </execution>
         </executions>
         <configuration>
+          <properties>
+            <java.net.preferIPv4Stack>true</java.net.preferIPv4Stack>
+          </properties>
           <jvmArguments>-Dswarm.http.port=9001</jvmArguments>
         </configuration>
       </plugin>

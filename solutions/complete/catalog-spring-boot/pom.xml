@@ -11,7 +11,7 @@
   <properties>
     <spring-boot.version>1.4.1.RELEASE</spring-boot.version>
     <spring-boot.bom.version>1</spring-boot.bom.version>
-    <fabric8.version>3.5.22</fabric8.version>
+    <fabric8.version>2.3.4</fabric8.version>
     <spring.k8s.bom.version>0.2.0.RELEASE</spring.k8s.bom.version>
     <k8s.client.version>2.4.1</k8s.client.version>
     <fabric8.maven.plugin.version>3.5.21</fabric8.maven.plugin.version>
