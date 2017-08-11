@@ -9,9 +9,12 @@ import io.vertx.ext.web.*;
 import io.vertx.ext.web.handler.CorsHandler;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class GatewayVerticle extends AbstractVerticle {
+    private static final Logger LOGGER = Logger.getLogger(GatewayVerticle.class.getName());
     private HttpClient client;
 
     @Override
@@ -80,7 +83,8 @@ public class GatewayVerticle extends AbstractVerticle {
                     }).end();
         }).setHandler(ar -> {
             if (ar.failed()) {
-                product.put("availability", new JsonObject().put("quantity", -1));
+                LOGGER.log(Level.SEVERE, "Inventory failed for product "
+                        + product.getString("itemId") + ": " + ar.cause().getMessage());
                 inventoryFuture.fail(ar.cause().getMessage());
             }
         });

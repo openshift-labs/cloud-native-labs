@@ -1,5 +1,7 @@
 package com.redhat.cloudnative.gateway;
 
+import io.vertx.circuitbreaker.CircuitBreaker;
+import io.vertx.circuitbreaker.CircuitBreakerOptions;
 import io.vertx.core.*;
 import io.vertx.core.http.*;
 import io.vertx.core.json.*;
@@ -7,9 +9,12 @@ import io.vertx.ext.web.*;
 import io.vertx.ext.web.handler.CorsHandler;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class GatewayVerticle extends AbstractVerticle {
+    private static final Logger LOGGER = Logger.getLogger(GatewayVerticle.class.getName());
     private HttpClient client;
 
     @Override
@@ -38,7 +43,7 @@ public class GatewayVerticle extends AbstractVerticle {
                 resp.bodyHandler(buff -> {
                     JsonArray products = new JsonArray(buff);
                     List<Future> inventory = products.stream()
-                            .map(product -> inventory((JsonObject)product))
+                            .map(product -> inventory((JsonObject) product))
                             .collect(Collectors.toList());
 
                     CompositeFuture.join(inventory).setHandler(ar -> {
@@ -78,8 +83,8 @@ public class GatewayVerticle extends AbstractVerticle {
                     }).end();
         }).setHandler(ar -> {
             if (ar.failed()) {
-                product.put("availability", new JsonObject().put("quantity", -1));
-                inventoryFuture.fail(ar.cause().getMessage());
+                LOGGER.log(Level.SEVERE, "Inventory failed for product "
+                        + product.getString("itemId") + ": " + ar.cause().getMessage());
             }
         });
 

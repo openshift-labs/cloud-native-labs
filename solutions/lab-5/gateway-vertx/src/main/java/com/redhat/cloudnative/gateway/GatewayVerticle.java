@@ -7,9 +7,11 @@ import io.vertx.ext.web.*;
 import io.vertx.ext.web.handler.CorsHandler;
 
 import java.util.List;
+import java.util.logging.*;
 import java.util.stream.Collectors;
 
 public class GatewayVerticle extends AbstractVerticle {
+    private static final Logger LOGGER = Logger.getLogger(GatewayVerticle.class.getName());
     private HttpClient client;
 
     @Override
