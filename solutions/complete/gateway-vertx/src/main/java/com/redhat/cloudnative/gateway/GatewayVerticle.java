@@ -92,10 +92,9 @@ public class GatewayVerticle extends AbstractVerticle {
                                     })
                                     .subscribe(
                                         future::complete,
-                                        future::fail)
-                                ,
+                                        future::fail),
                             error -> {
-                                LOG.error("Inventory failed for {}: {}", product.getString("itemId"), error.getMessage());
+                                LOG.error("Inventory error for {}: {}", product.getString("itemId"), error.getMessage());
                                 return product;
                             }
                         ))
