@@ -194,7 +194,7 @@ objects:
   metadata:
     labels:
       component: catalog
-      app: catalog
+      app: coolstore
     name: catalog
   spec:
     replicas: 1
@@ -267,7 +267,7 @@ objects:
   metadata:
     labels:
       component: gateway
-      app: gateway
+      app: coolstore
     name: gateway
   spec:
     replicas: 1
@@ -345,7 +345,7 @@ objects:
   metadata:
     labels:
       component: inventory
-      app: inventory
+      app: coolstore
     name: inventory
   spec:
     replicas: 1
@@ -435,7 +435,7 @@ objects:
   metadata:
     labels:
       component: web
-      app: web
+      app: coolstore
     name: web
   spec:
     replicas: 1
@@ -504,7 +504,6 @@ objects:
   kind: Service
   metadata:
     labels:
-      app: catalog
       component: catalog
     name: catalog
   spec:
@@ -521,7 +520,6 @@ objects:
   kind: Service
   metadata:
     labels:
-      app: gateway
       component: gateway
     name: gateway
   spec:
@@ -538,7 +536,6 @@ objects:
   kind: Service
   metadata:
     labels:
-      app: inventory
       component: inventory
     name: inventory
   spec:
@@ -555,7 +552,6 @@ objects:
   kind: Service
   metadata:
     labels:
-      app: web
       component: web
     name: web
   spec:
@@ -664,7 +660,7 @@ objects:
   kind: DeploymentConfig
   metadata:
     labels:
-      app: inventory-postgresql
+      app: coolstore
       component: inventory
     name: inventory-postgresql
   spec:
@@ -680,7 +676,7 @@ objects:
     template:
       metadata:
         labels:
-          app: inventory-postgresql
+          app: coolstore
           name: inventory-postgresql
       spec:
         containers:
@@ -747,7 +743,6 @@ objects:
   kind: Service
   metadata:
     labels:
-      app: inventory-postgresql
       component: inventory
     name: inventory-postgresql
   spec:
@@ -756,14 +751,13 @@ objects:
       protocol: TCP
       targetPort: 5432
     selector:
-      app: inventory-postgresql
       deploymentconfig: inventory-postgresql
     type: ClusterIP
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
-      app: catalog-postgresql
+      app: coolstore
       component: catalog
     name: catalog-postgresql
   spec:
@@ -779,7 +773,6 @@ objects:
     template:
       metadata:
         labels:
-          app: catalog-postgresql
           name: catalog-postgresql
       spec:
         containers:
@@ -846,7 +839,6 @@ objects:
   kind: Service
   metadata:
     labels:
-      app: catalog-postgresql
       component: catalog
     name: catalog-postgresql
   spec:
@@ -855,6 +847,5 @@ objects:
       protocol: TCP
       targetPort: 5432
     selector:
-      app: catalog-postgresql
       deploymentconfig: catalog-postgresql
     type: ClusterIP
