@@ -86,7 +86,8 @@ public class GatewayVerticle extends AbstractVerticle {
                                         if (resp.statusCode() != 200) {
                                             error("Invalid response from inventory: " + resp.statusCode());
                                         }
-                                        return product.copy().put("quantity", resp.body().getInteger("quantity"));
+                                        return product.copy().put("availability", 
+                                            new JsonObject().put("quantity", resp.body().getInteger("quantity")));
                                     })
                                     .subscribe(
                                         future::complete,
