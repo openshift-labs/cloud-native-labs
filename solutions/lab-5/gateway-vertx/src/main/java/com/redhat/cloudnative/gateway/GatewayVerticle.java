@@ -1,7 +1,5 @@
 package com.redhat.cloudnative.gateway;
 
-import java.util.logging.*;
-
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
@@ -13,11 +11,14 @@ import io.vertx.rxjava.ext.web.codec.BodyCodec;
 import io.vertx.rxjava.ext.web.handler.CorsHandler;
 import io.vertx.rxjava.servicediscovery.ServiceDiscovery;
 import io.vertx.rxjava.servicediscovery.types.HttpEndpoint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import rx.Observable;
 import rx.Single;
 
 public class GatewayVerticle extends AbstractVerticle {
-    private static final Logger LOGGER = Logger.getLogger(GatewayVerticle.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(GatewayVerticle.class);
+
     private WebClient catalog;
     private WebClient inventory;
 

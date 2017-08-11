@@ -14,6 +14,7 @@
         <vertx-maven-plugin.version>1.0.8</vertx-maven-plugin.version>
         <vertx.verticle>com.redhat.cloudnative.gateway.GatewayVerticle</vertx.verticle>
         <fabric8.maven.plugin.version>3.5.21</fabric8.maven.plugin.version>
+        <slf4j.version>1.7.25</slf4j.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -38,6 +39,32 @@
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-circuit-breaker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-web-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-rx-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-service-discovery</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-service-discovery-bridge-kubernetes</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -91,13 +118,6 @@
                             </vertx>
                         </config>
                     </generator>
-                    <enricher>
-                        <config>
-                            <vertx-health-check>
-                                <path>/health</path>
-                            </vertx-health-check>
-                        </config>
-                    </enricher>
                 </configuration>
             </plugin>
         </plugins>
