@@ -4,6 +4,7 @@ import io.vertx.circuitbreaker.CircuitBreakerOptions;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.client.WebClientOptions;
 import io.vertx.rxjava.circuitbreaker.CircuitBreaker;
 import io.vertx.rxjava.core.AbstractVerticle;
 import io.vertx.rxjava.ext.web.Router;
@@ -46,11 +47,17 @@ public class GatewayVerticle extends AbstractVerticle {
 
             // Catalog lookup
             Single<WebClient> catalogDiscoveryRequest = HttpEndpoint.rxGetWebClient(discovery,
-                rec -> rec.getName().equals("catalog"));
+                    rec -> rec.getName().equals("catalog"))
+                    .onErrorReturn(t -> WebClient.create(vertx, new WebClientOptions()
+                            .setDefaultHost("localhost")
+                            .setDefaultPort(9000)));
 
             // Inventory lookup
             Single<WebClient> inventoryDiscoveryRequest = HttpEndpoint.rxGetWebClient(discovery,
-                rec -> rec.getName().equals("inventory"));
+                    rec -> rec.getName().equals("inventory"))
+                    .onErrorReturn(t -> WebClient.create(vertx, new WebClientOptions()
+                            .setDefaultHost("localhost")
+                            .setDefaultPort(9001)));
 
             // Zip all 3 requests
             Single.zip(catalogDiscoveryRequest, inventoryDiscoveryRequest, (c, i) -> {

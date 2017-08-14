@@ -660,6 +660,20 @@ objects:
     labels:
       component: inventory
 - apiVersion: v1
+  kind: Secret
+  metadata:
+    name: inventory
+  stringData:
+    database-password: inventory
+    database-user: inventory
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: catalog
+  stringData:
+    database-password: catalog
+    database-user: catalog
+- apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
@@ -685,9 +699,15 @@ objects:
         containers:
         - env:
           - name: POSTGRESQL_USER
-            value: inventory
+            valueFrom:
+              secretKeyRef:
+                key: database-user
+                name: inventory
           - name: POSTGRESQL_PASSWORD
-            value: inventory
+            valueFrom:
+              secretKeyRef:
+                key: database-password
+                name: inventory
           - name: POSTGRESQL_DATABASE
             value: inventory
           image: postgresql
@@ -781,9 +801,15 @@ objects:
         containers:
         - env:
           - name: POSTGRESQL_USER
-            value: catalog
+            valueFrom:
+              secretKeyRef:
+                key: database-user
+                name: catalog
           - name: POSTGRESQL_PASSWORD
-            value: catalog
+            valueFrom:
+              secretKeyRef:
+                key: database-password
+                name: catalog
           - name: POSTGRESQL_DATABASE
             value: catalog
           image: postgresql

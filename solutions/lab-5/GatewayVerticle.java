@@ -3,6 +3,7 @@ package com.redhat.cloudnative.gateway;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.client.WebClientOptions;
 import io.vertx.rxjava.core.AbstractVerticle;
 import io.vertx.rxjava.ext.web.Router;
 import io.vertx.rxjava.ext.web.RoutingContext;
@@ -29,16 +30,20 @@ public class GatewayVerticle extends AbstractVerticle {
         router.get("/health").handler(ctx -> ctx.response().end(new JsonObject().put("status", "UP").toString()));
         router.get("/api/products").handler(this::products);
 
-        // Retrieve the service discovery
         ServiceDiscovery.create(vertx, discovery -> {
-
             // Catalog lookup
             Single<WebClient> catalogDiscoveryRequest = HttpEndpoint.rxGetWebClient(discovery,
-                rec -> rec.getName().equals("catalog"));
+                    rec -> rec.getName().equals("catalog"))
+                    .onErrorReturn(t -> WebClient.create(vertx, new WebClientOptions()
+                            .setDefaultHost("localhost")
+                            .setDefaultPort(9000)));
 
             // Inventory lookup
             Single<WebClient> inventoryDiscoveryRequest = HttpEndpoint.rxGetWebClient(discovery,
-                rec -> rec.getName().equals("inventory"));
+                    rec -> rec.getName().equals("inventory"))
+                    .onErrorReturn(t -> WebClient.create(vertx, new WebClientOptions()
+                            .setDefaultHost("localhost")
+                            .setDefaultPort(9001)));
 
             // Zip all 3 requests
             Single.zip(catalogDiscoveryRequest, inventoryDiscoveryRequest, (c, i) -> {
