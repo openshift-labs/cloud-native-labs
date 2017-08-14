@@ -852,3 +852,30 @@ objects:
     selector:
       deploymentconfig: catalog-postgresql
     type: ClusterIP
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      app: inventory-pipeline
+      component: inventory
+    name: inventory-pipeline
+  spec:
+    runPolicy: Parallel
+    source:
+      contextDir: solutions/complete/inventory-wildfly-swarm
+      git:
+        ref: ${GIT_REF}
+        uri: ${GIT_URI}
+      type: Git
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfilePath: Jenkinsfile
+      type: JenkinsPipeline
+    triggers:
+    - github:
+        secret: V7l7DtTdDOaU3eioZb97
+      type: GitHub
+    - generic:
+        secret: KyDr2_YFsWMsOjaWuzw_
+      type: Generic
+    - type: ConfigChange
