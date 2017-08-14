@@ -23,31 +23,36 @@ objects:
   kind: ImageStream
   metadata:
     labels:
-      component: catalog
+      microservice: catalog
+      app: coolstore
     name: catalog
 - apiVersion: v1
   kind: ImageStream
   metadata:
     labels:
-      component: gateway
+      microservice: gateway
+      app: coolstore
     name: gateway
 - apiVersion: v1
   kind: ImageStream
   metadata:
     labels:
-      component: inventory
+      microservice: inventory
+      app: coolstore
     name: inventory
 - apiVersion: v1
   kind: ImageStream
   metadata:
     labels:
-      component: web
+      microservice: web
+      app: coolstore
     name: web
 - apiVersion: v1
   kind: BuildConfig
   metadata:
     labels:
-      component: catalog
+      microservice: catalog
+      app: coolstore
     name: catalog-s2i
   spec:
     output:
@@ -86,7 +91,8 @@ objects:
   metadata:
     name: gateway-s2i
     labels:
-      component: gateway
+      microservice: gateway
+      app: coolstore
   spec:
     output:
       to:
@@ -122,7 +128,8 @@ objects:
   kind: BuildConfig
   metadata:
     labels:
-      component: inventory
+      microservice: inventory
+      app: coolstore
     name: inventory-s2i
   spec:
     output:
@@ -159,7 +166,8 @@ objects:
   kind: BuildConfig
   metadata:
     labels:
-      component: web
+      microservice: web
+      app: coolstore
     name: web-s2i
   spec:
     output:
@@ -193,14 +201,15 @@ objects:
   kind: DeploymentConfig
   metadata:
     labels:
-      component: catalog
+      microservice: catalog
       app: coolstore
     name: catalog
   spec:
     replicas: 1
     selector:
       deploymentconfig: catalog
-      component: catalog
+      microservice: catalog
+      app: coolstore
     strategy:
       activeDeadlineSeconds: 21600
       resources: {}
@@ -214,8 +223,9 @@ objects:
     template:
       metadata:
         labels:
-          component: catalog
+          microservice: catalog
           deploymentconfig: catalog
+          app: coolstore
       spec:
         containers:
         - image: catalog
@@ -266,14 +276,15 @@ objects:
   kind: DeploymentConfig
   metadata:
     labels:
-      component: gateway
+      microservice: gateway
       app: coolstore
     name: gateway
   spec:
     replicas: 1
     selector:
       deploymentconfig: gateway
-      component: gateway
+      microservice: gateway
+      app: coolstore
     strategy:
       activeDeadlineSeconds: 21600
       rollingParams:
@@ -287,7 +298,8 @@ objects:
       metadata:
         labels:
           deploymentconfig: gateway
-          component: gateway
+          microservice: gateway
+          app: coolstore
       spec:
         containers:
         - env:
@@ -344,14 +356,15 @@ objects:
   kind: DeploymentConfig
   metadata:
     labels:
-      component: inventory
+      microservice: inventory
       app: coolstore
     name: inventory
   spec:
     replicas: 1
     selector:
-      component: inventory
+      microservice: inventory
       deploymentconfig: inventory
+      app: coolstore
     strategy:
       activeDeadlineSeconds: 21600
       rollingParams:
@@ -364,8 +377,9 @@ objects:
     template:
       metadata:
         labels:
-          component: inventory
+          microservice: inventory
           deploymentconfig: inventory
+          app: coolstore
       spec:
         containers:
         - env:
@@ -434,14 +448,15 @@ objects:
   kind: DeploymentConfig
   metadata:
     labels:
-      component: web
+      microservice: web
       app: coolstore
     name: web
   spec:
     replicas: 1
     selector:
-      component: web
+      microservice: web
       deploymentconfig: web
+      app: coolstore
     strategy:
       activeDeadlineSeconds: 21600
       rollingParams:
@@ -454,8 +469,9 @@ objects:
     template:
       metadata:
         labels:
-          component: web
+          microservice: web
           deploymentconfig: web
+          app: coolstore
       spec:
         containers:
         - env:
@@ -504,7 +520,8 @@ objects:
   kind: Service
   metadata:
     labels:
-      component: catalog
+      microservice: catalog
+      app: coolstore
     name: catalog
   spec:
     ports:
@@ -513,14 +530,16 @@ objects:
       protocol: TCP
       targetPort: 8080
     selector:
-      component: catalog
+      microservice: catalog
       deploymentconfig: catalog
+      app: coolstore
     type: ClusterIP
 - apiVersion: v1
   kind: Service
   metadata:
     labels:
-      component: gateway
+      microservice: gateway
+      app: coolstore
     name: gateway
   spec:
     ports:
@@ -529,14 +548,16 @@ objects:
       protocol: TCP
       targetPort: 8080
     selector:
-      component: gateway
+      microservice: gateway
       deploymentconfig: gateway
+      app: coolstore
     type: ClusterIP
 - apiVersion: v1
   kind: Service
   metadata:
     labels:
-      component: inventory
+      microservice: inventory
+      app: coolstore
     name: inventory
   spec:
     ports:
@@ -545,14 +566,16 @@ objects:
       protocol: TCP
       targetPort: 8080
     selector:
-      component: inventory
+      microservice: inventory
       deploymentconfig: inventory
+      app: coolstore
     type: ClusterIP
 - apiVersion: v1
   kind: Service
   metadata:
     labels:
-      component: web
+      microservice: web
+      app: coolstore
     name: web
   spec:
     ports:
@@ -561,14 +584,16 @@ objects:
       protocol: TCP
       targetPort: 8080
     selector:
-      component: web
+      microservice: web
       deploymentconfig: web
+      app: coolstore
     type: ClusterIP
 - apiVersion: v1
   kind: Route
   metadata:
     labels:
-      component: catalog
+      microservice: catalog
+      app: coolstore
     name: catalog
   spec:
     port:
@@ -581,7 +606,8 @@ objects:
   kind: Route
   metadata:
     labels:
-      component: inventory
+      microservice: inventory
+      app: coolstore
     name: inventory
   spec:
     port:
@@ -594,7 +620,8 @@ objects:
   kind: Route
   metadata:
     labels:
-      component: gateway
+      microservice: gateway
+      app: coolstore
     name: gateway
   spec:
     port:
@@ -607,7 +634,8 @@ objects:
   kind: Route
   metadata:
     labels:
-      component: web
+      microservice: web
+      app: coolstore
     name: web
   spec:
     port:
@@ -623,6 +651,8 @@ objects:
   kind: RoleBinding
   metadata:
     name: view
+    labels:
+      app: coolstore
   roleRef:
     name: view
   subjects:
@@ -640,7 +670,8 @@ objects:
   metadata:
     name: catalog
     labels:
-      component: catalog
+      microservice: catalog
+      app: coolstore
 - apiVersion: v1
   data:
     project-stages.yml: |-
@@ -658,11 +689,15 @@ objects:
   metadata:
     name: inventory
     labels:
-      component: inventory
+      microservice: inventory
+      app: coolstore
 - apiVersion: v1
   kind: Secret
   metadata:
     name: inventory
+    labels:
+      microservice: inventory
+      app: coolstore
   stringData:
     database-password: inventory
     database-user: inventory
@@ -670,6 +705,9 @@ objects:
   kind: Secret
   metadata:
     name: catalog
+    labels:
+      microservice: catalog
+      app: coolstore
   stringData:
     database-password: catalog
     database-user: catalog
@@ -678,12 +716,13 @@ objects:
   metadata:
     labels:
       app: coolstore
-      component: inventory
+      microservice: inventory
     name: inventory-postgresql
   spec:
     replicas: 1
     selector:
       name: inventory-postgresql
+      deploymentconfig: inventory-postgresql
     strategy:
       activeDeadlineSeconds: 21600
       recreateParams:
@@ -695,6 +734,7 @@ objects:
         labels:
           app: coolstore
           name: inventory-postgresql
+          deploymentconfig: inventory-postgresql
       spec:
         containers:
         - env:
@@ -766,7 +806,8 @@ objects:
   kind: Service
   metadata:
     labels:
-      component: inventory
+      microservice: inventory
+      app: coolstore
     name: inventory-postgresql
   spec:
     ports:
@@ -781,12 +822,13 @@ objects:
   metadata:
     labels:
       app: coolstore
-      component: catalog
+      microservice: catalog
     name: catalog-postgresql
   spec:
     replicas: 1
     selector:
       name: catalog-postgresql
+      deploymentconfig: catalog-postgresql
     strategy:
       activeDeadlineSeconds: 21600
       recreateParams:
@@ -797,6 +839,8 @@ objects:
       metadata:
         labels:
           name: catalog-postgresql
+          deploymentconfig: catalog-postgresql
+          app: coolstore
       spec:
         containers:
         - env:
@@ -868,7 +912,8 @@ objects:
   kind: Service
   metadata:
     labels:
-      component: catalog
+      microservice: catalog
+      app: coolstore
     name: catalog-postgresql
   spec:
     ports:
@@ -882,8 +927,8 @@ objects:
   kind: BuildConfig
   metadata:
     labels:
-      app: inventory-pipeline
-      component: inventory
+      microservice: inventory
+      app: coolstore
     name: inventory-pipeline
   spec:
     runPolicy: Parallel

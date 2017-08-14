@@ -98,6 +98,7 @@
                 </executions>
                 <configuration>
                     <redeploy>true</redeploy>
+                    <jvmArgs>-Djava.net.preferIPv4Stack=true</jvmArgs>
                 </configuration>
             </plugin>
             <plugin>

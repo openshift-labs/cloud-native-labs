@@ -14,6 +14,7 @@ public class GatewayVerticle extends AbstractVerticle {
             rc.response().end("{\"message\": \"Hello World\"}");
         });
 
-        vertx.createHttpServer().requestHandler(router::accept).listen(8080);
+        vertx.createHttpServer().requestHandler(router::accept)
+            .listen(Integer.getInteger("http.port", 8080));
     }
 }

@@ -35,15 +35,15 @@ public class GatewayVerticle extends AbstractVerticle {
             Single<WebClient> catalogDiscoveryRequest = HttpEndpoint.rxGetWebClient(discovery,
                     rec -> rec.getName().equals("catalog"))
                     .onErrorReturn(t -> WebClient.create(vertx, new WebClientOptions()
-                            .setDefaultHost("localhost")
-                            .setDefaultPort(9000)));
+                            .setDefaultHost(System.getProperty("catalog.api.host", "localhost"))
+                            .setDefaultPort(Integer.getInteger("catalog.api.port", 9000))));
 
             // Inventory lookup
             Single<WebClient> inventoryDiscoveryRequest = HttpEndpoint.rxGetWebClient(discovery,
                     rec -> rec.getName().equals("inventory"))
                     .onErrorReturn(t -> WebClient.create(vertx, new WebClientOptions()
-                            .setDefaultHost("localhost")
-                            .setDefaultPort(9001)));
+                            .setDefaultHost(System.getProperty("inventory.api.host", "localhost"))
+                            .setDefaultPort(Integer.getInteger("inventory.api.port", 9001))));
 
             // Zip all 3 requests
             Single.zip(catalogDiscoveryRequest, inventoryDiscoveryRequest, (c, i) -> {
@@ -52,7 +52,7 @@ public class GatewayVerticle extends AbstractVerticle {
                 inventory = i;
                 return vertx.createHttpServer()
                     .requestHandler(router::accept)
-                    .listen(config().getInteger("http.port", 8080));
+                    .listen(Integer.getInteger("http.port", 8080));
             }).subscribe();
         });
     }
@@ -62,7 +62,7 @@ public class GatewayVerticle extends AbstractVerticle {
         catalog.get("/api/catalog").as(BodyCodec.jsonArray()).rxSend()
             .map(resp -> {
                 if (resp.statusCode() != 200) {
-                    error("Invalid response from the catalog: " + resp.statusCode());
+                    new RuntimeException("Invalid response from the catalog: " + resp.statusCode());
                 }
                 return resp.body();
             })
@@ -75,7 +75,9 @@ public class GatewayVerticle extends AbstractVerticle {
                             .rxSend()
                             .map(resp -> {
                                 if (resp.statusCode() != 200) {
-                                    error("Invalid response from inventory: " + resp.statusCode());
+                                    LOG.warn("Inventory error for {}: status code {}",
+                                            product.getString("itemId"), resp.statusCode());
+                                    return product.copy();
                                 }
                                 return product.copy().put("availability", 
                                     new JsonObject().put("quantity", resp.body().getInteger("quantity")));
@@ -86,9 +88,5 @@ public class GatewayVerticle extends AbstractVerticle {
                 list -> rc.response().end(Json.encodePrettily(list)),
                 error -> rc.response().end(new JsonObject().put("error", error.getMessage()).toString())
             );
-    }
-
-    private void error(String message) {
-        throw new RuntimeException(message);
     }
 }
