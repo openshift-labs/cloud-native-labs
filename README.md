@@ -38,3 +38,8 @@ Node.js and AngularJS adopting the microservices architecture.
           |             |     |             |
           +-------------+     +-------------+
 ```
+
+* Web: A Node.js/Angular front-end
+* API Gateway: aggregates API calls to back-end services and provides a condenses REST API for front-end
+* Catalog: a REST API for the product catalog and product information
+* Inventory: a REST API for product's inventory status

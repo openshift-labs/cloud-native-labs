@@ -56,7 +56,7 @@ objects:
         name: catalog:latest
     runPolicy: Serial
     source:
-      contextDir: solutions/complete/catalog-spring-boot
+      contextDir: solutions/all/catalog-spring-boot
       git:
         ref: ${GIT_REF}
         uri: ${GIT_URI}
@@ -93,7 +93,7 @@ objects:
         kind: ImageStreamTag
         name: gateway:latest
     source:
-      contextDir: solutions/complete/gateway-vertx
+      contextDir: solutions/all/gateway-vertx
       git:
         ref: ${GIT_REF}
         uri: ${GIT_URI}
@@ -130,7 +130,7 @@ objects:
         kind: ImageStreamTag
         name: inventory:latest
     source:
-      contextDir: solutions/complete/inventory-wildfly-swarm
+      contextDir: solutions/all/inventory-wildfly-swarm
       git:
         ref: ${GIT_REF}
         uri: ${GIT_URI}
@@ -888,7 +888,7 @@ objects:
   spec:
     runPolicy: Parallel
     source:
-      contextDir: solutions/complete/inventory-wildfly-swarm
+      contextDir: solutions/all/inventory-wildfly-swarm
       git:
         ref: ${GIT_REF}
         uri: ${GIT_URI}
