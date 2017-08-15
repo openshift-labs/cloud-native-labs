@@ -1,4 +1,11 @@
 
+############################################################################
+#  WARNING                                                         WARNING #
+#  WARNING     Replace the GitHub Repository URL with              WARNING #
+#  WARNING     your own repository in the following (2 places)     WARNING #
+#  WARNING                                                         WARNING #
+############################################################################
+
 # Add to GitHub
 cd inventory-wildfly-swarm
 git init
