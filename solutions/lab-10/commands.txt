@@ -1,0 +1,5 @@
+
+
+# Deploy to OpenShift
+cp lab-10/*.java inventory-wildfly-swarm/src/main/java/com/redhat/cloudnative/inventory
+mvn clean fabric8:deploy -f inventory-wildfly-swarm

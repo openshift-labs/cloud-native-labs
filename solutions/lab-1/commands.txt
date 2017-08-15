@@ -1,0 +1,6 @@
+# Create New Project
+oc new-project coolstore
+
+# Download Projects
+curl -sL -o projects.zip https://github.com/siamaksade/cloud-native-labs/archive/master.zip
+tar xvfz projects.zip --strip-components 1

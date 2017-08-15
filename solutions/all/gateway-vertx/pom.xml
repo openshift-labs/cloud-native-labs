@@ -109,6 +109,16 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <resources>
+                        <labels>
+                            <all>
+                                <property>
+                                    <name>microservice</name>
+                                    <value>gateway</value>
+                                </property>
+                            </all>
+                        </labels>
+                    </resources>
                     <generator>
                         <includes>
                             <include>vertx</include>

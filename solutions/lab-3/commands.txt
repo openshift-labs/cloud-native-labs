@@ -1,0 +1,5 @@
+
+
+# Deploy to OpenShift
+cp lab-3/*.java catalog-spring-boot/src/main/java/com/redhat/cloudnative/catalog
+mvn clean fabric8:deploy -f catalog-spring-boot

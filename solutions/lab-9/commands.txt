@@ -1,0 +1,38 @@
+
+# Add to GitHub
+cd inventory-wildfly-swarm
+git init
+git remote add origin https://github.com/YOUR-USERNAME/inventory-wildfly-swarm.git
+git add . --all
+git commit -m "initial add"
+git push -u origin master
+
+
+# Create Jenkinsfile
+cat << 'EOF' > Jenkinsfile
+node("maven") {
+  stage("Build JAR") {
+    git url: "INVENTORY-GIT-URL"
+    sh "mvn clean package"
+    stash name:"jar", includes:"target/inventory-1.0-SNAPSHOT-swarm.jar"
+  }
+
+  stage("Build Image") {
+    unstash name:"jar"
+    sh "oc start-build inventory-s2i --from-file=target/inventory-1.0-SNAPSHOT-swarm.jar"
+    openshiftVerifyBuild bldCfg: "inventory-s2i", waitTime: '20', waitUnit: 'min'
+  }
+
+  stage("Deploy") {
+    openshiftDeploy deploymentConfig: inventory
+  }
+}
+EOF
+
+git add Jenkinsfile
+git commit -m "pipeline added"
+git push origin master
+
+
+# Create Pipeline
+oc new-app . --name=inventory-pipeline --strategy=pipeline

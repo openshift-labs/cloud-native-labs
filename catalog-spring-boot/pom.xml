@@ -106,6 +106,16 @@
           </execution>
         </executions>
         <configuration>
+          <resources>
+              <labels>
+                  <all>
+                      <property>
+                          <name>microservice</name>
+                          <value>catalog</value>
+                      </property>
+                  </all>
+              </labels>
+          </resources>
           <generator>
             <includes>
               <include>spring-boot</include>

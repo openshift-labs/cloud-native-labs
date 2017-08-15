@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: RoleBinding
-metadata:
-  name: view
-roleRef:
-  name: view
-subjects:
-- kind: ServiceAccount
-  name: default
