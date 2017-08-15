@@ -168,14 +168,14 @@ objects:
     labels:
       microservice: web
       app: coolstore
-    name: web-s2i
+    name: web
   spec:
     output:
       to:
         kind: ImageStreamTag
         name: web:latest
     source:
-      contextDir: projects/web-nodejs
+      contextDir: web-nodejs
       git:
         ref: ${GIT_REF}
         uri: ${GIT_URI}
