@@ -16,7 +16,7 @@ git push -u origin master
 
 
 # Create Jenkinsfile
-cat << 'EOF' > Jenkinsfile
+cat <<EOF > Jenkinsfile
 node("maven") {
   stage("Build JAR") {
     git url: "INVENTORY-GIT-URL"

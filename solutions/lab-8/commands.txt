@@ -1,5 +1,5 @@
 # Inventory ConfigMap
-cat << 'EOF' > ./project-stages.yml
+cat <<EOF > ./project-stages.yml
 project:
   stage: prod
 swarm:
@@ -19,7 +19,7 @@ oc volume dc/inventory --add --configmap-name=inventory --mount-path=/app/config
 oc set env dc/inventory JAVA_OPTIONS="-Dswarm.project.stage=prod -Dswarm.project.stage.file=file:///app/config/project-stages.yml"
 
 # Catalog Config Map
-cat << 'EOF' > ./application.properties
+cat <<EOF > ./application.properties
 spring.datasource.url=jdbc:postgresql://catalog-postgresql:5432/catalog
 spring.datasource.username=catalog
 spring.datasource.password=catalog
