@@ -1,4 +1,6 @@
-
+###################
+# Lab 5 Solution  #
+###################
 
 # Deploy Web on OpenShift
 oc new-app nodejs~https://github.com/siamaksade/cloud-native-labs.git \

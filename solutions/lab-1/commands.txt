@@ -1,3 +1,7 @@
+###################
+# Lab 1 Solution  #
+###################
+
 # Create New Project
 oc new-project coolstore
 

@@ -1,5 +1,7 @@
-
+###################
+# Lab 10 Solution  #
+###################
 
 # Deploy to OpenShift
-cp lab-10/*.java inventory-wildfly-swarm/src/main/java/com/redhat/cloudnative/inventory
+cp solutions/lab-10/*.java inventory-wildfly-swarm/src/main/java/com/redhat/cloudnative/inventory
 mvn clean fabric8:deploy -f inventory-wildfly-swarm

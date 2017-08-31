@@ -1,3 +1,7 @@
+###################
+# Lab 8 Solution  #
+###################
+
 # Inventory ConfigMap
 cat <<EOF > ./project-stages.yml
 project:

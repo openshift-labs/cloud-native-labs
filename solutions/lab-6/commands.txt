@@ -1,4 +1,6 @@
-
+###################
+# Lab 6 Solution  #
+###################
 
 # Health Probes
 oc set probe dc/catalog --liveness --readiness --get-url=http://:8080/health
