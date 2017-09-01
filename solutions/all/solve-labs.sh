@@ -4,11 +4,10 @@
 # Lab Solution Script #
 #######################
 
-# Usage:    
+# USAGE:    
 #   $ solve-labs.sh [lab-no] [lab-no] ... [lab-no]
 
-# Example:  
-#   $ solve-labs.sh 1 2 3 4 5 
+# EXAMPLES: Run in the working directory
 #   $ bash <(curl -sL https://raw.githubusercontent.com/openshift-roadshow/cloud-native-labs/master/solutions/all/solve-labs.sh) 1 2 3
 
 for LAB_NO in "$@"

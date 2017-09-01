@@ -124,6 +124,11 @@
                             </all>
                         </labels>
                     </resources>
+                    <enricher>
+                        <excludes>
+                            <exclude>vertx-health-check</exclude>
+                        </excludes>
+                    </enricher>
                     <generator>
                         <includes>
                             <include>vertx</include>

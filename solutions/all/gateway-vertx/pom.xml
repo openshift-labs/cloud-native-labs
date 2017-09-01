@@ -129,6 +129,13 @@
                             </vertx>
                         </config>
                     </generator>
+                    <enricher>
+                        <config>
+                            <vertx-health-check>
+                                <path>/health</path>
+                            </vertx-health-check>
+                        </config>
+                    </enricher>
                 </configuration>
             </plugin>
         </plugins>

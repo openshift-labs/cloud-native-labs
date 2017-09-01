@@ -133,11 +133,9 @@
             </config>
           </generator>
           <enricher>
-            <config>
-              <wildfly-swarm-health-check>
-                <path>/node</path>
-              </wildfly-swarm-health-check>
-            </config>
+            <excludes>
+              <exclude>wildfly-swarm-health-check</exclude>
+            </excludes>
           </enricher>
         </configuration>
       </plugin>

@@ -116,6 +116,11 @@
                   </all>
               </labels>
           </resources>
+          <enricher>
+            <excludes>
+              <exclude>spring-boot-health-check</exclude>
+            </excludes>
+          </enricher>
           <generator>
             <includes>
               <include>spring-boot</include>
