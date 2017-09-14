@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(value = "/api/catalog")
 public class CatalogController {
 
-	@Autowired
+	  @Autowired
     private ProductRepository repository;
 
     @ResponseBody
