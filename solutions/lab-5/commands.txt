@@ -5,7 +5,6 @@
 # Deploy Web on OpenShift
 oc new-app nodejs~https://github.com/siamaksade/cloud-native-labs.git \
         --context-dir=web-nodejs \
-        --name=web \
-        --labels=app=coolstore,microservice=web
+        --name=web 
+
 oc expose svc/web
-oc label dc app=coolstore --all --overwrite
