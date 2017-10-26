@@ -15,7 +15,7 @@
         <vertx.version>3.4.2</vertx.version>
         <vertx-maven-plugin.version>1.0.8</vertx-maven-plugin.version>
         <vertx.verticle>com.redhat.cloudnative.gateway.GatewayVerticle</vertx.verticle>
-        <fabric8.maven.plugin.version>3.5.30</fabric8.maven.plugin.version>
+        <fabric8.maven.plugin.version>3.5.32</fabric8.maven.plugin.version>
         <slf4j.version>1.7.25</slf4j.version>
     </properties>
 
