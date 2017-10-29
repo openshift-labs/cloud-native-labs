@@ -110,7 +110,7 @@
               <labels>
                   <all>
                       <property>
-                          <name>microservice</name>
+                          <name>app</name>
                           <value>catalog</value>
                       </property>
                   </all>

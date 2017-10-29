@@ -118,7 +118,7 @@
                         <labels>
                             <all>
                                 <property>
-                                    <name>microservice</name>
+                                    <name>app</name>
                                     <value>gateway</value>
                                 </property>
                             </all>
