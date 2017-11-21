@@ -122,7 +122,7 @@
             </includes>
             <config>
               <spring-boot>
-                <from>redhat-openjdk-18/openjdk18-openshift</from>
+                <from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.1</from>
               </spring-boot>
             </config>
           </generator>
