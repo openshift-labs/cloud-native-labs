@@ -21,21 +21,38 @@ git push -u origin master
 
 # Create Jenkinsfile
 cat <<EOF > Jenkinsfile
-node("maven") {
-  stage("Build JAR") {
-    git url: "INVENTORY-GIT-URL"
-    sh "mvn clean package"
-    stash name:"jar", includes:"target/inventory-1.0-SNAPSHOT-swarm.jar"
+pipeline {
+  agent {
+      label 'maven'
   }
-
-  stage("Build Image") {
-    unstash name:"jar"
-    sh "oc start-build inventory-s2i --from-file=target/inventory-1.0-SNAPSHOT-swarm.jar"
-    openshiftVerifyBuild bldCfg: "inventory-s2i", waitTime: '20', waitUnit: 'min'
-  }
-
-  stage("Deploy") {
-    openshiftDeploy deploymentConfig: inventory
+  stages {
+    stage('Build JAR') {
+      steps {
+        sh "mvn package"
+        stash name:"jar", includes:"target/inventory-1.0-SNAPSHOT-swarm.jar"
+      }
+    }
+    stage('Build Image') {
+      steps {
+        unstash name:"jar"
+        script {
+          openshift.withCluster() {
+            openshift.startBuild("inventory-s2i", "--from-file=target/inventory-1.0-SNAPSHOT-swarm.jar", "--wait")
+          }
+        }
+      }
+    }
+    stage('Deploy') {
+      steps {
+        script {
+          openshift.withCluster() {
+            def dc = openshift.selector("dc", "inventory")
+            dc.rollout().latest()
+            dc.rollout().status()
+          }
+        }
+      }
+    }
   }
 }
 EOF
@@ -46,4 +63,11 @@ git push origin master
 
 
 # Create Pipeline
+oc login -u system:admin
+oc import-image jenkins:v3.7 --from='registry.access.redhat.com/openshift3/jenkins-2-rhel7:v3.7' --confirm -n openshift
+oc export template jenkins-persistent -n openshift -o json | sed 's/jenkins:latest/jenkins:v3.7/g' | oc replace -f - -n openshift
+oc export template jenkins-ephemeral -n openshift -o json | sed 's/jenkins:latest/jenkins:v3.7/g' | oc replace -f - -n openshift
+oc login -u developer -p developer
+oc new-app jenkins-ephemeral
+sleep 30
 oc new-app . --name=inventory-pipeline --strategy=pipeline
