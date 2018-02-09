@@ -10,7 +10,7 @@ env:
   - BUILD_CMD="mvn -f catalog-spring-boot package"
   - BUILD_CMD="mvn -f gateway-vertx package"
   - BUILD_CMD="mvn -f inventory-wildfly-swarm package"
-  - BUILD_CMD="npm install --prefix web-nodesjs"
+  - BUILD_CMD="npm install --prefix web-nodejs"
   - BUILD_CMD="mvn -f solutions/all/catalog-spring-boot package"
   - BUILD_CMD="mvn -f solutions/all/gateway-vertx package"
   - BUILD_CMD="mvn -f solutions/all/inventory-wildfly-swarm package"
