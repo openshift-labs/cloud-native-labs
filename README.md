@@ -1,4 +1,4 @@
-# OpenShift Cloud Native Roadshow  [![Build Status](https://travis-ci.org/openshift-labs/cloud-native-labs.svg?branch=master)](https://travis-ci.org/openshift-labs/cloud-native-labs)
+# Cloud Native Roadshow Labs  [![Build Status](https://travis-ci.org/openshift-labs/cloud-native-labs.svg?branch=master)](https://travis-ci.org/openshift-labs/cloud-native-labs)
 
 This is a one-day hands-on lab experience for bulding Cloud Native applications using 
 Red Hat OpenShift Application Runtimes (Spring Boot, WildFly Swarm, Eclipse Vert.x and Node.js) 
