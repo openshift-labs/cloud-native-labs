@@ -9,7 +9,7 @@ parameters:
   displayName: Git Repository
   name: GIT_URI
   required: true
-  value: https://github.com/siamaksade/cloud-native-labs.git
+  value: https://github.com/openshift-labs/cloud-native-labs.git
 - description: Git branch/tag reference
   displayName: Git Branch/Tag
   name: GIT_REF
