@@ -6,5 +6,5 @@
 oc new-project coolstore
 
 # Download Projects
-curl -sL -o projects.zip https://github.com/openshift-roadshow/cloud-native-labs/archive/master.zip
+curl -sL -o projects.zip https://github.com/openshift-labs/cloud-native-labs/archive/master.zip
 tar xvfz projects.zip --strip-components 1
