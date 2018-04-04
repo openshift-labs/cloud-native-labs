@@ -10,9 +10,9 @@
   <name>CoolStore Inventory Service</name>
   <description>CoolStore Inventory Service with WildFly Swarm</description>
   <properties>
-    <version.wildfly.swarm>2017.8.1</version.wildfly.swarm>
-    <fabric8.version>2.3.4</fabric8.version>
-    <fabric8.maven.plugin.version>3.5.32</fabric8.maven.plugin.version>
+    <version.wildfly.swarm>7.0.1.redhat-20</version.wildfly.swarm>
+    <fabric8.version>3.0.11</fabric8.version>
+    <fabric8.maven.plugin.version>3.5.38</fabric8.maven.plugin.version>
     <h2.version>1.4.187</h2.version>
     <postgresql.version>9.4.1207</postgresql.version>
     <failOnMissingWebXml>false</failOnMissingWebXml>
@@ -21,7 +21,14 @@
     <dependencies>
       <dependency>
         <groupId>org.wildfly.swarm</groupId>
-        <artifactId>bom-all</artifactId>
+        <artifactId>bom</artifactId>
+        <version>${version.wildfly.swarm}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.wildfly.swarm</groupId>
+        <artifactId>bom-certified</artifactId>
         <version>${version.wildfly.swarm}</version>
         <type>pom</type>
         <scope>import</scope>
