@@ -8,7 +8,7 @@
 #   $ solve-labs.sh [lab-no] [lab-no] ... [lab-no]
 
 # EXAMPLES: Run in the working directory
-#   $ bash <(curl -sL https://raw.githubusercontent.com/openshift-labs/cloud-native-labs/master/solutions/all/solve-labs.sh) 1 2 3
+#   $ bash <(curl -sL https://raw.githubusercontent.com/openshift-labs/cloud-native-labs/ocp-3.7/solutions/all/solve-labs.sh) 1 2 3
 
 for LAB_NO in "$@"
 do
@@ -22,6 +22,6 @@ do
       echo " Solving Lab $LAB_NO"
       echo "########################"
       echo
-      bash <(curl -sL https://raw.githubusercontent.com/openshift-labs/cloud-native-labs/master/solutions/lab-$LAB_NO/commands.txt)
+      bash <(curl -sL https://raw.githubusercontent.com/openshift-labs/cloud-native-labs/ocp-3.7/solutions/lab-$LAB_NO/commands.txt)
     fi
 done
