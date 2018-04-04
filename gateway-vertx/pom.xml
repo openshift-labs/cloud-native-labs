@@ -12,11 +12,11 @@
     <description>CoolStore Gateway Service with Eclipse Vert.x</description>
 
     <properties>
-        <vertx.version>3.4.2</vertx.version>
-        <vertx-maven-plugin.version>1.0.8</vertx-maven-plugin.version>
+        <vertx.version>3.4.2.redhat-009</vertx.version>
+        <vertx-maven-plugin.version>1.0.13</vertx-maven-plugin.version>
         <vertx.verticle>com.redhat.cloudnative.gateway.GatewayVerticle</vertx.verticle>
-        <fabric8.maven.plugin.version>3.5.32</fabric8.maven.plugin.version>
-        <slf4j.version>1.7.25</slf4j.version>
+        <fabric8.maven.plugin.version>3.5.38</fabric8.maven.plugin.version>
+        <slf4j.version>1.7.21</slf4j.version>
     </properties>
 
     <dependencyManagement>
@@ -135,7 +135,7 @@
                         </includes>
                         <config>
                             <vertx>
-                                <from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.1</from>
+                                <from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.2</from>
                             </vertx>
                         </config>
                     </generator>
