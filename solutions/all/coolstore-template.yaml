@@ -14,7 +14,7 @@ parameters:
   displayName: Git Branch/Tag
   name: GIT_REF
   required: true
-  value: master
+  value: ocp-3.9
 - description: Maven mirror url e.g. Artifactory or Nexus http://nexus.ci:8081/content/groups/public/
   displayName: Maven Mirror URL
   name: MAVEN_MIRROR_URL
