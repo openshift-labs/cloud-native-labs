@@ -3,7 +3,7 @@
 ###################
 
 # Create New Project
-oc new-project coolstore
+oc new-project $PROJECT_NAME
 
 # Download Projects
 curl -sL -o projects.zip https://github.com/openshift-labs/cloud-native-labs/archive/ocp-3.9.zip

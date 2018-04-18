@@ -3,7 +3,7 @@
 ###################
 
 # Enable Vert.x Service Discovery
-oc policy add-role-to-user view -n coolstore -z default
+oc policy add-role-to-user view -n $PROJECT_NAME -z default
 
 # Deploy to OpenShift
 cp solutions/lab-4/*.java gateway-vertx/src/main/java/com/redhat/cloudnative/gateway
