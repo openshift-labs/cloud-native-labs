@@ -16,6 +16,18 @@
     <fabric8.maven.plugin.version>3.5.38</fabric8.maven.plugin.version>
     <postgresql.version>9.4.1212</postgresql.version>
   </properties>
+  <repositories>
+    <repository>
+      <id>redhat-ga</id>
+      <url>https://maven.repository.redhat.com/ga/</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>redhat-ga-plugins</id>
+      <url>https://maven.repository.redhat.com/ga/</url>
+    </pluginRepository>
+  </pluginRepositories>
   <dependencyManagement>
     <dependencies>
       <dependency>
