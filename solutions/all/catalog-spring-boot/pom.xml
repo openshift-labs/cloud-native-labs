@@ -110,6 +110,7 @@
         <version>${fabric8.maven.plugin.version}</version>
         <executions>
           <execution>
+            <phase>install</phase>
             <goals>
               <goal>resource</goal>
               <goal>build</goal>
