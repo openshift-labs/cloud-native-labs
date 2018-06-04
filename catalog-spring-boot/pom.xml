@@ -13,7 +13,7 @@
     <spring-boot.bom.version>1.5.10.SP2-redhat-2</spring-boot.bom.version>
     <spring.k8s.bom.version>0.2.0.RELEASE</spring.k8s.bom.version>
     <k8s.client.version>3.1.10</k8s.client.version>
-    <fabric8.maven.plugin.version>3.5.38</fabric8.maven.plugin.version>
+    <fabric8.maven.plugin.version>3.5.39</fabric8.maven.plugin.version>
     <postgresql.version>9.4.1212</postgresql.version>
   </properties>
   <repositories>
