@@ -10,8 +10,8 @@
 # EXAMPLES: Run in the working directory
 #   $ bash <(curl -sL https://raw.githubusercontent.com/openshift-labs/cloud-native-labs/ocp-3.9/solutions/all/solve-labs.sh) 1 2 3
 
-GITHUB_ACCOUNT=${GITHUB_ACCOUNT:-openshift-labs}
-PROJECT_NAME=${PROJECT_NAME:-coolstore}
+export GITHUB_ACCOUNT=${GITHUB_ACCOUNT:-openshift-labs}
+export PROJECT_NAME=${PROJECT_NAME:-coolstore}
 
 echo "##########################################################"
 echo " Using Project Name: ${PROJECT_NAME}"
