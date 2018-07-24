@@ -13,7 +13,7 @@
 
     <properties>
         <vertx.version>3.4.2.redhat-009</vertx.version>
-        <vertx-maven-plugin.version>1.0.13</vertx-maven-plugin.version>
+        <vertx-maven-plugin.version>1.0.15</vertx-maven-plugin.version>
         <vertx.verticle>com.redhat.cloudnative.gateway.GatewayVerticle</vertx.verticle>
         <fabric8.maven.plugin.version>3.5.40</fabric8.maven.plugin.version>
         <slf4j.version>1.7.21</slf4j.version>
@@ -97,7 +97,7 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>io.fabric8</groupId>
+                <groupId>io.reactiverse</groupId>
                 <artifactId>vertx-maven-plugin</artifactId>
                 <version>${vertx-maven-plugin.version}</version>
                 <executions>
