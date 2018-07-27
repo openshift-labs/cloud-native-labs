@@ -96,7 +96,9 @@
           <properties>
             <java.net.preferIPv4Stack>true</java.net.preferIPv4Stack>
           </properties>
-          <jvmArguments>-Dswarm.http.port=9001</jvmArguments>
+          <jvmArguments>
+            <jvmArgument>-Dswarm.http.port=9001</jvmArgument>
+          </jvmArguments>
         </configuration>
       </plugin>
       <plugin>
