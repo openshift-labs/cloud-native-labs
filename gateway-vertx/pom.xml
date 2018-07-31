@@ -12,7 +12,7 @@
     <description>CoolStore Gateway Service with Eclipse Vert.x</description>
 
     <properties>
-        <vertx.version>3.4.2.redhat-009</vertx.version>
+        <vertx.version>3.5.1.redhat-004</vertx.version>
         <vertx-maven-plugin.version>1.0.15</vertx-maven-plugin.version>
         <vertx.verticle>com.redhat.cloudnative.gateway.GatewayVerticle</vertx.verticle>
         <fabric8.maven.plugin.version>3.5.40</fabric8.maven.plugin.version>
