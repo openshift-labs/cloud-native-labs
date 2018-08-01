@@ -2,6 +2,8 @@
 # Lab 10 Solution  #
 ###################
 
+DIRECTORY=`dirname $0`
+
 # Deploy to OpenShift
-cp solutions/lab-10/*.java inventory-wildfly-swarm/src/main/java/com/redhat/cloudnative/inventory
-mvn clean fabric8:deploy -f inventory-wildfly-swarm
+cp $DIRECTORY/*.java $DIRECTORY/../../inventory-wildfly-swarm/src/main/java/com/redhat/cloudnative/inventory
+mvn clean fabric8:deploy -f $DIRECTORY/../../inventory-wildfly-swarm
