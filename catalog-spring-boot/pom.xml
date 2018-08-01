@@ -9,12 +9,11 @@
   <name>CoolStore Catalog Service</name>
   <description>CoolStore Catalog Service with Spring Boot</description>
   <properties>
-    <spring-boot.version>1.5.10.RELEASE</spring-boot.version>
-    <spring-boot.bom.version>1.5.10.SP2-redhat-2</spring-boot.bom.version>
+    <spring-boot.version>1.5.14.RELEASE</spring-boot.version>
+    <spring-boot.bom.version>1.5.14.Final-redhat-1</spring-boot.bom.version>
     <spring.k8s.bom.version>0.2.0.RELEASE</spring.k8s.bom.version>
-    <k8s.client.version>3.1.10</k8s.client.version>
     <fabric8.maven.plugin.version>3.5.40</fabric8.maven.plugin.version>
-    <postgresql.version>9.4.1212</postgresql.version>
+    <postgresql.version>42.2.4</postgresql.version>
   </properties>
   <repositories>
     <repository>
@@ -62,11 +61,6 @@
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-kubernetes-config</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.fabric8</groupId>
-      <artifactId>kubernetes-client</artifactId>
-      <version>${k8s.client.version}</version>
     </dependency>
     <dependency>
       <groupId>com.h2database</groupId>
@@ -139,7 +133,7 @@
             </includes>
             <config>
               <spring-boot>
-                <from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.2</from>
+                <from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.4</from>
               </spring-boot>
             </config>
           </generator>

@@ -14,7 +14,7 @@
     <fabric8.version>3.0.12</fabric8.version>
     <fabric8.maven.plugin.version>3.5.40</fabric8.maven.plugin.version>
     <h2.version>1.4.187</h2.version>
-    <postgresql.version>9.4.1207</postgresql.version>
+    <postgresql.version>42.2.4</postgresql.version>
     <failOnMissingWebXml>false</failOnMissingWebXml>
   </properties>
   <repositories>
@@ -148,7 +148,7 @@
             </includes>
             <config>
               <wildfly-swarm>
-                <from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.2</from>
+                <from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.4</from>
               </wildfly-swarm>
             </config>
           </generator>

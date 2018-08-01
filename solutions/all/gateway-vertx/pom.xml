@@ -138,7 +138,7 @@
                         </includes>
                         <config>
                             <vertx>
-                                <from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.2</from>
+                                <from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.4</from>
                             </vertx>
                         </config>
                     </generator>

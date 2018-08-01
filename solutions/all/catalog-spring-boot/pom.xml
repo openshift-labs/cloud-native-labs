@@ -14,7 +14,7 @@
     <spring.k8s.bom.version>0.2.0.RELEASE</spring.k8s.bom.version>
     <k8s.client.version>3.1.10</k8s.client.version>
     <fabric8.maven.plugin.version>3.5.40</fabric8.maven.plugin.version>
-    <postgresql.version>9.4.1212</postgresql.version>
+    <postgresql.version>42.2.4</postgresql.version>
   </properties>
   <repositories>
     <repository>
@@ -134,7 +134,7 @@
             </includes>
             <config>
               <spring-boot>
-                <from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.2</from>
+                <from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.4</from>
               </spring-boot>
             </config>
           </generator>
