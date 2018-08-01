@@ -2,9 +2,11 @@
 # Lab 4 Solution  #
 ###################
 
+DIRECTORY=`dirname $0`
+
 # Enable Vert.x Service Discovery
 oc policy add-role-to-user view -n $PROJECT_NAME -z default
 
 # Deploy to OpenShift
-cp solutions/lab-4/*.java gateway-vertx/src/main/java/com/redhat/cloudnative/gateway
-mvn clean fabric8:deploy -f gateway-vertx
+cp $DIRECTORY/*.java $DIRECTORY/../../gateway-vertx/src/main/java/com/redhat/cloudnative/gateway
+mvn clean fabric8:deploy -f $DIRECTORY/../../gateway-vertx

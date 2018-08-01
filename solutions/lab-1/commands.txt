@@ -3,8 +3,9 @@
 ###################
 
 # Create New Project
-oc new-project $PROJECT_NAME
+echo "TODO: run 'oc new-project PROJECT_NAME'"
 
 # Download Projects
-curl -sL -o projects.zip https://github.com/openshift-labs/cloud-native-labs/archive/ocp-3.9.zip
-tar xvfz projects.zip --strip-components 1
+curl -sL -o projects.zip https://github.com/openshift-labs/cloud-native-labs/archive/ocp-3.10.zip
+
+echo "TODO: unzip projects.zip"
