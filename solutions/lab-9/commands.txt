@@ -10,6 +10,8 @@
 #  WARNING                                                         WARNING #
 ############################################################################
 
+echo "CAUTION: THIS SOLUTION HAS MANUAL STEPS"
+
 DIRECTORY=`dirname $0`
 
 # Add to GitHub
