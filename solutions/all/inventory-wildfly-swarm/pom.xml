@@ -134,13 +134,16 @@
         <configuration>
           <resources>
               <labels>
-                  <all>
-                      <property>
-                          <name>app</name>
-                          <value>inventory</value>
-                      </property>
-                  </all>
+                <all>
+                  <property>
+                    <name>app</name>
+                    <value>inventory</value>
+                  </property>
+                </all>
               </labels>
+              <env>
+                <GC_MAX_METASPACE_SIZE>300</GC_MAX_METASPACE_SIZE>
+              </env>
           </resources>
           <generator>
             <includes>
