@@ -10,8 +10,12 @@
 #  WARNING                                                         WARNING #
 ############################################################################
 
+echo "CAUTION: THIS SOLUTION HAS MANUAL STEPS"
+
+DIRECTORY=`dirname $0`
+
 # Add to GitHub
-cd inventory-wildfly-swarm
+pushd $DIRECTORY/../../inventory-wildfly-swarm
 git init
 git remote add origin https://github.com/YOUR-USERNAME/inventory-wildfly-swarm.git
 git add . --all
@@ -71,3 +75,5 @@ oc login -u developer -p developer
 oc new-app jenkins-ephemeral
 sleep 30
 oc new-app . --name=inventory-pipeline --strategy=pipeline
+
+popd

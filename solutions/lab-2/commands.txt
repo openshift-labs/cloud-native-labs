@@ -1,7 +1,0 @@
-###################
-# Lab 2 Solution  #
-###################
-
-# Deploy to OpenShift
-cp solutions/lab-2/*.java inventory-wildfly-swarm/src/main/java/com/redhat/cloudnative/inventory
-mvn clean fabric8:deploy -f inventory-wildfly-swarm

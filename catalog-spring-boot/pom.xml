@@ -9,19 +9,29 @@
   <name>CoolStore Catalog Service</name>
   <description>CoolStore Catalog Service with Spring Boot</description>
   <properties>
-    <spring-boot.version>1.4.1.RELEASE</spring-boot.version>
-    <spring-boot.bom.version>1</spring-boot.bom.version>
-    <fabric8.version>2.3.4</fabric8.version>
+    <spring-boot.version>1.5.14.RELEASE</spring-boot.version>
+    <spring-boot.bom.version>1.5.14.Final-redhat-1</spring-boot.bom.version>
     <spring.k8s.bom.version>0.2.0.RELEASE</spring.k8s.bom.version>
-    <k8s.client.version>2.4.1</k8s.client.version>
-    <fabric8.maven.plugin.version>3.5.32</fabric8.maven.plugin.version>
-    <postgresql.version>9.4.1212</postgresql.version>
+    <fabric8.maven.plugin.version>3.5.40</fabric8.maven.plugin.version>
+    <postgresql.version>42.2.4</postgresql.version>
   </properties>
+  <repositories>
+    <repository>
+      <id>redhat-ga</id>
+      <url>https://maven.repository.redhat.com/ga/</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>redhat-ga-plugins</id>
+      <url>https://maven.repository.redhat.com/ga/</url>
+    </pluginRepository>
+  </pluginRepositories>
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.jboss.snowdrop</groupId>
-        <artifactId>spring-boot-1.4-bom</artifactId>
+        <groupId>me.snowdrop</groupId>
+        <artifactId>spring-boot-bom</artifactId>
         <version>${spring-boot.bom.version}</version>
         <type>pom</type>
         <scope>import</scope>
@@ -51,11 +61,6 @@
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-kubernetes-config</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.fabric8</groupId>
-      <artifactId>kubernetes-client</artifactId>
-      <version>${k8s.client.version}</version>
     </dependency>
     <dependency>
       <groupId>com.h2database</groupId>
@@ -99,6 +104,7 @@
         <version>${fabric8.maven.plugin.version}</version>
         <executions>
           <execution>
+            <phase>install</phase>
             <goals>
               <goal>resource</goal>
               <goal>build</goal>
@@ -127,7 +133,7 @@
             </includes>
             <config>
               <spring-boot>
-                <from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.1</from>
+                <from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.4</from>
               </spring-boot>
             </config>
           </generator>

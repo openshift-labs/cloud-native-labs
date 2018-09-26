@@ -12,12 +12,25 @@
     <description>CoolStore Gateway Service with Eclipse Vert.x</description>
 
     <properties>
-        <vertx.version>3.4.2</vertx.version>
-        <vertx-maven-plugin.version>1.0.8</vertx-maven-plugin.version>
+        <vertx.version>3.5.1.redhat-004</vertx.version>
+        <vertx-maven-plugin.version>1.0.15</vertx-maven-plugin.version>
         <vertx.verticle>com.redhat.cloudnative.gateway.GatewayVerticle</vertx.verticle>
-        <fabric8.maven.plugin.version>3.5.32</fabric8.maven.plugin.version>
-        <slf4j.version>1.7.25</slf4j.version>
+        <fabric8.maven.plugin.version>3.5.40</fabric8.maven.plugin.version>
+        <slf4j.version>1.7.21</slf4j.version>
     </properties>
+
+    <repositories>
+      <repository>
+        <id>redhat-ga</id>
+        <url>https://maven.repository.redhat.com/ga/</url>
+      </repository>
+    </repositories>
+    <pluginRepositories>
+      <pluginRepository>
+        <id>redhat-ga-plugins</id>
+        <url>https://maven.repository.redhat.com/ga/</url>
+      </pluginRepository>
+    </pluginRepositories>
 
     <dependencyManagement>
         <dependencies>
@@ -84,7 +97,7 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>io.fabric8</groupId>
+                <groupId>io.reactiverse</groupId>
                 <artifactId>vertx-maven-plugin</artifactId>
                 <version>${vertx-maven-plugin.version}</version>
                 <executions>
@@ -107,6 +120,7 @@
                 <version>${fabric8.maven.plugin.version}</version>
                 <executions>
                     <execution>
+                        <phase>install</phase>
                         <goals>
                             <goal>resource</goal>
                             <goal>build</goal>
@@ -135,7 +149,7 @@
                         </includes>
                         <config>
                             <vertx>
-                                <from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.1</from>
+                                <from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.4</from>
                             </vertx>
                         </config>
                     </generator>

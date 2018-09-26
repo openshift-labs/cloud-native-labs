@@ -14,7 +14,7 @@ parameters:
   displayName: Git Branch/Tag
   name: GIT_REF
   required: true
-  value: master
+  value: ocp-3.10
 - description: Maven mirror url e.g. Artifactory or Nexus http://nexus.ci:8081/content/groups/public/
   displayName: Maven Mirror URL
   name: MAVEN_MIRROR_URL
@@ -68,7 +68,7 @@ objects:
           value: ${MAVEN_MIRROR_URL}
         from:
           kind: ImageStreamTag
-          name: redhat-openjdk18-openshift:1.1
+          name: java:8
           namespace: openshift
       type: Source
     triggers:
@@ -106,7 +106,7 @@ objects:
         from:
           kind: ImageStreamTag
           namespace: openshift
-          name: redhat-openjdk18-openshift:1.1
+          name: java:8
       type: Source
     triggers:
     - github:
@@ -143,7 +143,7 @@ objects:
         from:
           kind: ImageStreamTag
           namespace: openshift
-          name: redhat-openjdk18-openshift:1.1
+          name: java:8
       type: Source
     triggers:
     - github:

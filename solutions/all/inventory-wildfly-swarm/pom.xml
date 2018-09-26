@@ -10,18 +10,37 @@
   <name>CoolStore Inventory Service</name>
   <description>CoolStore Inventory Service with WildFly Swarm</description>
   <properties>
-    <version.wildfly.swarm>2017.8.1</version.wildfly.swarm>
-    <fabric8.version>2.3.4</fabric8.version>
-    <fabric8.maven.plugin.version>3.5.32</fabric8.maven.plugin.version>
+    <version.wildfly.swarm>7.1.0.redhat-77</version.wildfly.swarm>
+    <fabric8.version>3.0.12</fabric8.version>
+    <fabric8.maven.plugin.version>3.5.40</fabric8.maven.plugin.version>
     <h2.version>1.4.187</h2.version>
-    <postgresql.version>9.4.1207</postgresql.version>
+    <postgresql.version>42.2.4</postgresql.version>
     <failOnMissingWebXml>false</failOnMissingWebXml>
   </properties>
+  <repositories>
+    <repository>
+      <id>redhat-ga</id>
+      <url>https://maven.repository.redhat.com/ga/</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>redhat-ga-plugins</id>
+      <url>https://maven.repository.redhat.com/ga/</url>
+    </pluginRepository>
+  </pluginRepositories>
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>org.wildfly.swarm</groupId>
-        <artifactId>bom-all</artifactId>
+        <artifactId>bom</artifactId>
+        <version>${version.wildfly.swarm}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.wildfly.swarm</groupId>
+        <artifactId>bom-certified</artifactId>
         <version>${version.wildfly.swarm}</version>
         <type>pom</type>
         <scope>import</scope>
@@ -105,6 +124,7 @@
         <version>${fabric8.maven.plugin.version}</version>
         <executions>
           <execution>
+            <phase>install</phase>
             <goals>
               <goal>resource</goal>
               <goal>build</goal>
@@ -114,13 +134,16 @@
         <configuration>
           <resources>
               <labels>
-                  <all>
-                      <property>
-                          <name>app</name>
-                          <value>inventory</value>
-                      </property>
-                  </all>
+                <all>
+                  <property>
+                    <name>app</name>
+                    <value>inventory</value>
+                  </property>
+                </all>
               </labels>
+              <env>
+                <GC_MAX_METASPACE_SIZE>300</GC_MAX_METASPACE_SIZE>
+              </env>
           </resources>
           <generator>
             <includes>
@@ -128,7 +151,7 @@
             </includes>
             <config>
               <wildfly-swarm>
-                <from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.1</from>
+                <from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.4</from>
               </wildfly-swarm>
             </config>
           </generator>

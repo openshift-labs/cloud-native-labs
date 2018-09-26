@@ -19,24 +19,21 @@ oc new-app postgresql-persistent \
     --labels=app=catalog
 
 # Inventory ConfigMap
-cat <<EOF > ./project-stages.yml
-project:
-  stage: prod
+cat <<EOF > ./project-defaults.yml
 swarm:
   datasources:
-    datasources:
-      data-sources:
-        InventoryDS:
-          driver-name: postgresql
-          connection-url: jdbc:postgresql://inventory-postgresql:5432/inventory
-          user-name: inventory
-          password: inventory
+    data-sources:
+      InventoryDS:
+        driver-name: postgresql
+        connection-url: jdbc:postgresql://inventory-postgresql:5432/inventory
+        user-name: inventory
+        password: inventory
 EOF
 
 
-oc create configmap inventory --from-file=project-stages.yml=./project-stages.yml
+oc create configmap inventory --from-file=project-defaults.yml=./project-defaults.yml
 oc volume dc/inventory --add --configmap-name=inventory --mount-path=/app/config
-oc set env dc/inventory JAVA_OPTIONS="-Dswarm.project.stage=prod -Dswarm.project.stage.file=file:///app/config/project-stages.yml"
+oc set env dc/inventory JAVA_ARGS="-s /app/config/project-defaults.yml"
 
 # Catalog Config Map
 cat <<EOF > ./application.properties

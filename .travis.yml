@@ -4,6 +4,7 @@ jdk:
   - oraclejdk8
 
 before_install:
+  - cp .travis.settings.xml $HOME/.m2/settings.xml
   - nvm install 4.4
 
 env:
