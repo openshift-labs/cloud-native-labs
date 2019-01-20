@@ -8,9 +8,9 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>CoolStore Inventory Service</name>
-  <description>CoolStore Inventory Service with WildFly Swarm</description>
+  <description>CoolStore Inventory Service with Thorntail</description>
   <properties>
-    <version.wildfly.swarm>7.1.0.redhat-77</version.wildfly.swarm>
+    <version.thorntail>2.2.1.Final</version.thorntail>
     <fabric8.version>3.0.12</fabric8.version>
     <fabric8.maven.plugin.version>3.5.40</fabric8.maven.plugin.version>
     <h2.version>1.4.187</h2.version>
@@ -32,16 +32,9 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.wildfly.swarm</groupId>
+        <groupId>io.thorntail</groupId>
         <artifactId>bom</artifactId>
-        <version>${version.wildfly.swarm}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.wildfly.swarm</groupId>
-        <artifactId>bom-certified</artifactId>
-        <version>${version.wildfly.swarm}</version>
+        <version>${version.thorntail}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -56,20 +49,12 @@
   </dependencyManagement>
   <dependencies>
     <dependency>
-      <groupId>org.wildfly.swarm</groupId>
-      <artifactId>jaxrs-jsonp</artifactId>
+      <groupId>io.thorntail</groupId>
+      <artifactId>microprofile</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.wildfly.swarm</groupId>
-      <artifactId>cdi</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.wildfly.swarm</groupId>
+      <groupId>io.thorntail</groupId>
       <artifactId>jpa</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.wildfly.swarm</groupId>
-      <artifactId>monitor</artifactId>
     </dependency>
     <dependency>
       <groupId>com.h2database</groupId>
@@ -94,16 +79,9 @@
         </configuration>
       </plugin>
       <plugin>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>3.1.0</version>
-        <configuration>
-          <failOnMissingWebXml>false</failOnMissingWebXml>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.wildfly.swarm</groupId>
-        <artifactId>wildfly-swarm-plugin</artifactId>
-        <version>${version.wildfly.swarm}</version>
+        <groupId>io.thorntail</groupId>
+        <artifactId>thorntail-maven-plugin</artifactId>
+        <version>${version.thorntail}</version>
         <executions>
           <execution>
             <goals>
@@ -116,7 +94,7 @@
             <java.net.preferIPv4Stack>true</java.net.preferIPv4Stack>
           </properties>
           <jvmArguments>
-            <jvmArgument>-Dswarm.http.port=9001</jvmArgument>
+            <jvmArgument>-Dthorntail.http.port=9001</jvmArgument>
           </jvmArguments>
         </configuration>
       </plugin>
@@ -149,17 +127,17 @@
           </resources>
           <generator>
             <includes>
-              <include>wildfly-swarm</include>
+              <include>thorntail</include>
             </includes>
             <config>
-              <wildfly-swarm>
+              <thorntail>
                 <from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.4</from>
-              </wildfly-swarm>
+              </thorntail>
             </config>
           </generator>
           <enricher>
             <excludes>
-              <exclude>wildfly-swarm-health-check</exclude>
+              <exclude>thorntail-health-check</exclude>
             </excludes>
           </enricher>
         </configuration>
