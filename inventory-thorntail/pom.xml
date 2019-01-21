@@ -10,7 +10,7 @@
   <name>CoolStore Inventory Service</name>
   <description>CoolStore Inventory Service with Thorntail</description>
   <properties>
-    <version.thorntail>2.2.1.Final</version.thorntail>
+    <version.thorntail>2.2.0.Final-redhat-00021</version.thorntail>
     <fabric8.version>3.0.12</fabric8.version>
     <fabric8.maven.plugin.version>3.5.40</fabric8.maven.plugin.version>
     <h2.version>1.4.187</h2.version>
@@ -76,6 +76,13 @@
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.1.0</version>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
         </configuration>
       </plugin>
       <plugin>
