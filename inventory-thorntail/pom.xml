@@ -57,6 +57,14 @@
       <artifactId>cdi</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.thorntail</groupId>
+      <artifactId>microprofile-restclient</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.thorntail</groupId>
+      <artifactId>microprofile-health</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <version>${h2.version}</version>
@@ -144,7 +152,7 @@
           </generator>
           <enricher>
             <excludes>
-              <exclude>thorntail-health-check</exclude>
+              <exclude>thorntail-v2-health-check</exclude>
             </excludes>
           </enricher>
         </configuration>
