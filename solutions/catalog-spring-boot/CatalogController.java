@@ -1,22 +1,16 @@
 package com.redhat.cloudnative.catalog;
 
-import java.util.List;
-import java.util.Spliterator;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
+import java.util.*;
+import java.util.stream.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping(value = "/api/catalog")
 public class CatalogController {
-
-	  @Autowired
+    @Autowired
     private ProductRepository repository;
 
     @ResponseBody
