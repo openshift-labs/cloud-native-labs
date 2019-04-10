@@ -4,19 +4,19 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.WebClientOptions;
-import io.vertx.rxjava.core.AbstractVerticle;
-import io.vertx.rxjava.ext.web.Router;
-import io.vertx.rxjava.ext.web.RoutingContext;
-import io.vertx.rxjava.ext.web.client.WebClient;
-import io.vertx.rxjava.ext.web.codec.BodyCodec;
-import io.vertx.rxjava.ext.web.handler.CorsHandler;
-import io.vertx.rxjava.ext.web.handler.StaticHandler;
-import io.vertx.rxjava.servicediscovery.ServiceDiscovery;
-import io.vertx.rxjava.servicediscovery.types.HttpEndpoint;
+import io.vertx.reactivex.core.AbstractVerticle;
+import io.vertx.reactivex.ext.web.Router;
+import io.vertx.reactivex.ext.web.RoutingContext;
+import io.vertx.reactivex.ext.web.client.WebClient;
+import io.vertx.reactivex.ext.web.codec.BodyCodec;
+import io.vertx.reactivex.ext.web.handler.CorsHandler;
+import io.vertx.reactivex.ext.web.handler.StaticHandler;
+import io.vertx.reactivex.servicediscovery.ServiceDiscovery;
+import io.vertx.reactivex.servicediscovery.types.HttpEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import rx.Observable;
-import rx.Single;
+import io.reactivex.Observable;
+import io.reactivex.Single;
 
 public class GatewayVerticle extends AbstractVerticle {
     private static final Logger LOG = LoggerFactory.getLogger(GatewayVerticle.class);
@@ -70,7 +70,7 @@ public class GatewayVerticle extends AbstractVerticle {
             })
             .flatMap(products ->
                 // For each item from the catalog, invoke the inventory service
-                Observable.from(products)
+                Observable.fromIterable(products)
                     .cast(JsonObject.class)
                     .flatMapSingle(product ->
                         inventory.get("/api/inventory/" + product.getString("itemId")).as(BodyCodec.jsonObject())
@@ -84,7 +84,7 @@ public class GatewayVerticle extends AbstractVerticle {
                                 return product.copy().put("availability",
                                     new JsonObject().put("quantity", resp.body().getInteger("quantity")));
                             }))
-                    .toList().toSingle()
+                    .toList()
             )
             .subscribe(
                 list -> rc.response().end(Json.encodePrettily(list)),
