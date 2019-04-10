@@ -30,7 +30,9 @@ func GetProducts(w http.ResponseWriter, r *http.Request){
 			Product{ ItemId: "444435", Name: "Oculus Rift", Description: "THE WORLD OF GAMING HAS ALSO UNDERGONE SOME VERY UNIQUE AND COMPELLING TECH ADVANCES IN RECENT YEARS. VIRTUAL REALITY...", Price: 106.00},
 			Product{ ItemId: "444436", Name: "Lytro Camera", Description: "CONSUMERS WHO WANT TO UP THEIR PHOTOGRAPHY GAME ARE LOOKING AT NEWFANGLED CAMERAS LIKE THE LYTRO FIELD CAMERA, DESIGNED TO ...", Price: 44.30},
     }
- 
+	
+	// Define Content-Type = application/json
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
     if err := json.NewEncoder(w).Encode(products); err != nil {
         panic(err)
     }

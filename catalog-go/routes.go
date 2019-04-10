@@ -34,13 +34,13 @@ func NewRouter() *mux.Router {
 
 var routes = Routes{
     Route{
-        "Index",
+        "HomePage",
         "GET",
         "/",
         HomePage,
     },
     Route{
-        "TodoIndex",
+        "GetProducts",
         "GET",
         "/api/catalog",
         GetProducts,
