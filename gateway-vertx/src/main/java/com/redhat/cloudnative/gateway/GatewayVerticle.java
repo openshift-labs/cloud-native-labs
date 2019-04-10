@@ -1,13 +1,14 @@
 package com.redhat.cloudnative.gateway;
 
 import io.vertx.core.http.HttpMethod;
-import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.WebClientOptions;
 import io.vertx.reactivex.core.AbstractVerticle;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.client.WebClient;
+import io.vertx.reactivex.ext.web.client.predicate.ResponsePredicate;
 import io.vertx.reactivex.ext.web.codec.BodyCodec;
 import io.vertx.reactivex.ext.web.handler.CorsHandler;
 import io.vertx.reactivex.ext.web.handler.StaticHandler;
@@ -17,6 +18,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GatewayVerticle extends AbstractVerticle {
     private static final Logger LOG = LoggerFactory.getLogger(GatewayVerticle.class);
@@ -53,7 +57,7 @@ public class GatewayVerticle extends AbstractVerticle {
                 catalog = c;
                 inventory = i;
                 return vertx.createHttpServer()
-                    .requestHandler(router::accept)
+                    .requestHandler(router)
                     .listen(Integer.getInteger("http.port", 8080));
             }).subscribe();
         });
@@ -61,34 +65,50 @@ public class GatewayVerticle extends AbstractVerticle {
 
     private void products(RoutingContext rc) {
         // Retrieve catalog
-        catalog.get("/api/catalog").as(BodyCodec.jsonArray()).rxSend()
+        catalog
+            .get("/api/catalog")
+            .as(BodyCodec.jsonArray())
+            .expect(ResponsePredicate.SC_OK)
+            .rxSend()
             .map(resp -> {
-                if (resp.statusCode() != 200) {
-                    new RuntimeException("Invalid response from the catalog: " + resp.statusCode());
+                // Map the response to a list of JSON object
+                List<JsonObject> listOfProducts = new ArrayList<>();
+                for (Object product : resp.body()) {
+                    listOfProducts.add((JsonObject)product);
                 }
-                return resp.body();
+                return listOfProducts;
             })
-            .flatMap(products ->
+            .flatMap(products -> {
                 // For each item from the catalog, invoke the inventory service
-                Observable.fromIterable(products)
-                    .cast(JsonObject.class)
-                    .flatMapSingle(product ->
-                        inventory.get("/api/inventory/" + product.getString("itemId")).as(BodyCodec.jsonObject())
-                            .rxSend()
-                            .map(resp -> {
-                                if (resp.statusCode() != 200) {
-                                    LOG.warn("Inventory error for {}: status code {}",
-                                        product.getString("itemId"), resp.statusCode());
-                                    return product.copy();
-                                }
-                                return product.copy().put("availability",
-                                    new JsonObject().put("quantity", resp.body().getInteger("quantity")));
-                            }))
-                    .toList()
+                // and create a JsonArray containing all the results
+                return Observable.fromIterable(products)
+                    .flatMapSingle(this::getAvailabilityFromInventory)
+                    .collect(JsonArray::new, JsonArray::add);
+                }
             )
             .subscribe(
-                list -> rc.response().end(Json.encodePrettily(list)),
-                error -> rc.response().end(new JsonObject().put("error", error.getMessage()).toString())
+                list -> rc.response().end(list.encodePrettily()),
+                error -> rc.response().setStatusCode(500).end(new JsonObject().put("error", error.getMessage()).toString())
             );
+    }
+
+    private Single<JsonObject> getAvailabilityFromInventory(JsonObject product) {
+        // Retrieve the inventory for a given product
+        return inventory
+            .get("/api/inventory/" + product.getString("itemId"))
+            .as(BodyCodec.jsonObject())
+            .rxSend()
+            .map(resp -> {
+                JsonObject json = product.copy();
+                if (resp.statusCode() != 200) {
+                    LOG.warn("Inventory error for {}: status code {}",
+                        product.getString("itemId"), resp.statusCode());
+                } else {
+                    json.put("availability",
+                        new JsonObject()
+                            .put("quantity", resp.body().getInteger("quantity")));
+                }
+                return json;
+            });
     }
 }
