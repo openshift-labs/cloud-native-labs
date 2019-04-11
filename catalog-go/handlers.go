@@ -27,7 +27,7 @@ func GetProducts(w http.ResponseWriter, r *http.Request){
 
 	if misbehave {
 		w.WriteHeader(http.StatusServiceUnavailable)
-		w.Write([]byte("Misbehavior of the Catalog GoLang Service")
+		w.Write([]byte("Misbehavior of the Catalog GoLang Service"))
 	} else {
 		products := Products{
 			Product{ ItemId: "329299", Name: "Red Fedora", Description: "OFFICIAL RED HAT FEDORA", Price: 34.99},
@@ -52,7 +52,7 @@ func Behave(w http.ResponseWriter, r *http.Request){
 	misbehave = false
 	log.Print("'misbehave' has been set to 'false'") 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Next request to / will return 200")
+	w.Write([]byte("Next request to / will return 200"))
 	return
 }
 
