@@ -6,10 +6,14 @@
   <groupId>com.redhat.cloudnative</groupId>
   <artifactId>inventory</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <packaging>war</packaging>
+  <packaging>jar</packaging>
   <name>CoolStore Inventory Service</name>
   <description>CoolStore Inventory Service with Thorntail</description>
   <properties>
+    <vertx.version>3.6.3.redhat-00009</vertx.version>
+    <vertx-maven-plugin.version>1.0.15</vertx-maven-plugin.version>
+    <vertx.verticle>com.redhat.cloudnative.inventory.InventoryVerticle</vertx.verticle>
+    <slf4j.version>1.7.21</slf4j.version>
     <version.thorntail>2.2.0.Final-redhat-00021</version.thorntail>
     <fabric8.version>3.0.12</fabric8.version>
     <fabric8.maven.plugin.version>3.5.40</fabric8.maven.plugin.version>
@@ -32,6 +36,13 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-dependencies</artifactId>
+        <version>${vertx.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
         <groupId>io.thorntail</groupId>
         <artifactId>bom</artifactId>
         <version>${version.thorntail}</version>
@@ -49,20 +60,48 @@
   </dependencyManagement>
   <dependencies>
     <dependency>
-      <groupId>io.thorntail</groupId>
-      <artifactId>jaxrs-jsonp</artifactId>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.thorntail</groupId>
-      <artifactId>cdi</artifactId>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-config</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.thorntail</groupId>
-      <artifactId>microprofile-restclient</artifactId>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-config-yaml</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.thorntail</groupId>
-      <artifactId>microprofile-health</artifactId>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-jdbc-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.agroal</groupId>
+      <artifactId>agroal-api</artifactId>
+      <version>1.3.0.redhat-00001</version>
+    </dependency>
+    <dependency>
+      <groupId>io.agroal</groupId>
+      <artifactId>agroal-pool</artifactId>
+      <version>1.3.0.redhat-00001</version>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-rx-java2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-jdk14</artifactId>
+      <version>${slf4j.version}</version>
     </dependency>
     <dependency>
       <groupId>com.h2database</groupId>
@@ -74,10 +113,7 @@
       <artifactId>postgresql</artifactId>
       <version>${postgresql.version}</version>
     </dependency>
-    <dependency>
-      <groupId>io.thorntail</groupId>
-      <artifactId>jpa</artifactId>
-    </dependency>  </dependencies>
+  </dependencies>
   <build>
     <plugins>
       <plugin>
@@ -90,30 +126,21 @@
         </configuration>
       </plugin>
       <plugin>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>3.1.0</version>
-        <configuration>
-          <failOnMissingWebXml>false</failOnMissingWebXml>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>io.thorntail</groupId>
-        <artifactId>thorntail-maven-plugin</artifactId>
-        <version>${version.thorntail}</version>
+        <groupId>io.reactiverse</groupId>
+        <artifactId>vertx-maven-plugin</artifactId>
+        <version>${vertx-maven-plugin.version}</version>
         <executions>
           <execution>
+            <id>vmp</id>
             <goals>
+              <goal>initialize</goal>
               <goal>package</goal>
             </goals>
           </execution>
         </executions>
         <configuration>
-          <properties>
-            <java.net.preferIPv4Stack>true</java.net.preferIPv4Stack>
-          </properties>
-          <jvmArguments>
-            <jvmArgument>-Dthorntail.http.port=9001</jvmArgument>
-          </jvmArguments>
+          <redeploy>true</redeploy>
+          <jvmArgs>-Djava.net.preferIPv4Stack=true</jvmArgs>
         </configuration>
       </plugin>
       <plugin>
@@ -131,33 +158,30 @@
         </executions>
         <configuration>
           <resources>
-              <labels>
-                <all>
-                  <property>
-                    <name>app</name>
-                    <value>inventory</value>
-                  </property>
-                </all>
-              </labels>
-              <env>
-                <GC_MAX_METASPACE_SIZE>300</GC_MAX_METASPACE_SIZE>
-              </env>
+            <labels>
+              <all>
+                <property>
+                  <name>app</name>
+                  <value>gateway</value>
+                </property>
+              </all>
+            </labels>
           </resources>
-          <generator>
-            <includes>
-              <include>thorntail-v2</include>
-            </includes>
-            <config>
-              <thorntail>
-                <from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.4</from>
-              </thorntail>
-            </config>
-          </generator>
           <enricher>
             <excludes>
-              <exclude>thorntail-v2-health-check</exclude>
+              <exclude>vertx-health-check</exclude>
             </excludes>
           </enricher>
+          <generator>
+            <includes>
+              <include>vertx</include>
+            </includes>
+            <config>
+              <vertx>
+                <from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.4</from>
+              </vertx>
+            </config>
+          </generator>
         </configuration>
       </plugin>
     </plugins>
