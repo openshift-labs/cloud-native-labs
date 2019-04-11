@@ -74,7 +74,10 @@
       <artifactId>postgresql</artifactId>
       <version>${postgresql.version}</version>
     </dependency>
-  </dependencies>
+    <dependency>
+      <groupId>io.thorntail</groupId>
+      <artifactId>jpa</artifactId>
+    </dependency>  </dependencies>
   <build>
     <plugins>
       <plugin>
