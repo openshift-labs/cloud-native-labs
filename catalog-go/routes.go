@@ -45,4 +45,16 @@ var routes = Routes{
         "/api/catalog",
         GetProducts,
     },
+    Route{
+        "Misbehave",
+        "GET",
+        "/api/misbehave",
+        Misbehave,
+    },
+    Route{
+        "Behave",
+        "GET",
+        "/api/behave",
+        Behave,
+    },
 }

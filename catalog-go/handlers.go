@@ -7,6 +7,11 @@ import (
 	"encoding/json"
 )
 
+/**
+* Flag for throwing a 503 when enabled
+*/
+var misbehave = false
+
 func HomePage(w http.ResponseWriter, r *http.Request){
 
 	template := template.Must(template.ParseFiles("templates/homepage.html"))
@@ -20,7 +25,11 @@ func HomePage(w http.ResponseWriter, r *http.Request){
 
 func GetProducts(w http.ResponseWriter, r *http.Request){
 
-	products := Products{
+	if misbehave {
+		w.WriteHeader(http.StatusServiceUnavailable)
+		w.Write("Misbehavior of the Catalog GoLang Service\n")
+	} else {
+		products := Products{
 			Product{ ItemId: "329299", Name: "Red Fedora", Description: "OFFICIAL RED HAT FEDORA", Price: 34.99},
 			Product{ ItemId: "329199", Name: "Forge Laptop Sticker", Description: "JBOSS COMMUNITY FORGE PROJECT STICKER", Price: 8.50},
 			Product{ ItemId: "165613", Name: "Solid Performance Polo", Description: "MOISTURE-WICKING, ANTIMICROBIAL 100% POLYESTER DESIGN WICKS FOR LIFE OF GARMENT. NO-CURL, RIB-KNIT COLLAR...", Price: 17.80},
@@ -29,11 +38,28 @@ func GetProducts(w http.ResponseWriter, r *http.Request){
 			Product{ ItemId: "444434", Name: "Pebble Smart Watch", Description: "SMART GLASSES AND SMART WATCHES ARE PERHAPS TWO OF THE MOST EXCITING DEVELOPMENTS IN RECENT YEARS.", Price: 24.00},
 			Product{ ItemId: "444435", Name: "Oculus Rift", Description: "THE WORLD OF GAMING HAS ALSO UNDERGONE SOME VERY UNIQUE AND COMPELLING TECH ADVANCES IN RECENT YEARS. VIRTUAL REALITY...", Price: 106.00},
 			Product{ ItemId: "444436", Name: "Lytro Camera", Description: "CONSUMERS WHO WANT TO UP THEIR PHOTOGRAPHY GAME ARE LOOKING AT NEWFANGLED CAMERAS LIKE THE LYTRO FIELD CAMERA, DESIGNED TO ...", Price: 44.30},
-    }
-	
-	// Define Content-Type = application/json
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-    if err := json.NewEncoder(w).Encode(products); err != nil {
-        panic(err)
-    }
+		}
+		
+		// Define Content-Type = application/json
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		if err := json.NewEncoder(w).Encode(products); err != nil {
+			panic(err)
+		}
+	}
+}
+
+func Behave(w http.ResponseWriter, r *http.Request){
+	this.misbehave = false;
+	logger.debug("'misbehave' has been set to 'false'");
+	w.WriteHeader(http.StatusOK)
+	w.Write("Next request to / will return 200\n")
+	return
+}
+
+func Misbehave(w http.ResponseWriter, r *http.Request){
+	this.misbehave = true;
+	logger.debug("'misbehave' has been set to 'true'");
+	w.WriteHeader(http.StatusOK)
+	w.Write("Next request to / will return a 503\n")
+	return
 }
