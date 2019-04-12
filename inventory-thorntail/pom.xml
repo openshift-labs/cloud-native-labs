@@ -69,6 +69,10 @@
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
+      <artifactId>vertx-config-kubernetes-configmap</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
       <artifactId>vertx-config-yaml</artifactId>
     </dependency>
     <dependency>
@@ -162,7 +166,7 @@
               <all>
                 <property>
                   <name>app</name>
-                  <value>gateway</value>
+                  <value>inventory</value>
                 </property>
               </all>
             </labels>

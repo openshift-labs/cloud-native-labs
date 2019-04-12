@@ -19,6 +19,16 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+/**
+ * Changes from Thorntail:
+ *
+ * - config map file is named "app-config.yml"
+ * - port is 8080 by default and can be overriden with http.port env
+ *
+ * CLI for config:
+ * - oc create configmap inventory --from-file=./app-config.yml
+ * - oc set volume dc/inventory --add --configmap-name=inventory --mount-path=/deployments/config
+ */
 public class InventoryVerticle extends AbstractVerticle {
 
   private static final Logger LOG = LoggerFactory.getLogger(InventoryVerticle.class);
@@ -41,9 +51,8 @@ public class InventoryVerticle extends AbstractVerticle {
         .addStore(new ConfigStoreOptions()
             .setType("file")
             .setFormat("yaml")
-            .setOptional(true)
             .setConfig(new JsonObject()
-                .put("path", "project-defaults.yml")));
+                .put("path", "config/app-config.yml")));
     ConfigRetriever retriever = ConfigRetriever.create(vertx, configOptions);
     Single<JsonObject> s = retriever.rxGetConfig();
 
@@ -56,7 +65,7 @@ public class InventoryVerticle extends AbstractVerticle {
   private void findQuantity(RoutingContext rc) {
     String itemId = rc.pathParam("itemId");
     inventoryClient.queryWithParams(
-        "select QUANTITY from INVENTORY where itemId=?",
+        "select \"QUANTITY\" from \"INVENTORY\" where \"ITEMID\"=?",
         new JsonArray().add(itemId),
         ar -> {
           if (ar.succeeded()) {
@@ -81,17 +90,18 @@ public class InventoryVerticle extends AbstractVerticle {
   }
 
   private Single<ResultSet> populateDatabase(JsonObject config) {
+    LOG.info("Will use database " + config.getValue("jdbcUrl"));
     inventoryClient = JDBCClient.createNonShared(vertx, config);
     String sql = "" +
         "drop table if exists INVENTORY;" +
-        "create table INVENTORY (ITEMID varchar(32) PRIMARY KEY, QUANTITY int);" +
-        "insert into INVENTORY (ITEMID, quantity) values (329299, 35);" +
-        "insert into INVENTORY (ITEMID, quantity) values (329199, 12);" +
-        "insert into INVENTORY (ITEMID, quantity) values (165613, 45);" +
-        "insert into INVENTORY (ITEMID, quantity) values (165614, 87);" +
-        "insert into INVENTORY (ITEMID, quantity) values (165954, 43);" +
-        "insert into INVENTORY (ITEMID, quantity) values (444434, 32);" +
-        "insert into INVENTORY (ITEMID, quantity) values (444435, 53);";
+        "create table \"INVENTORY\" (\"ITEMID\" varchar(32) PRIMARY KEY, \"QUANTITY\" int);" +
+        "insert into \"INVENTORY\" (\"ITEMID\", \"QUANTITY\") values (329299, 35);" +
+        "insert into \"INVENTORY\" (\"ITEMID\", \"QUANTITY\") values (329199, 12);" +
+        "insert into \"INVENTORY\" (\"ITEMID\", \"QUANTITY\") values (165613, 45);" +
+        "insert into \"INVENTORY\" (\"ITEMID\", \"QUANTITY\") values (165614, 87);" +
+        "insert into \"INVENTORY\" (\"ITEMID\", \"QUANTITY\") values (165954, 43);" +
+        "insert into \"INVENTORY\" (\"ITEMID\", \"QUANTITY\") values (444434, 32);" +
+        "insert into \"INVENTORY\" (\"ITEMID\", \"QUANTITY\") values (444435, 53);";
     return inventoryClient.rxQuery(sql);
   }
 }
