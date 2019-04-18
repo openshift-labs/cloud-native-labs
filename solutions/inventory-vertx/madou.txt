@@ -1,0 +1,8 @@
+# Changes from Thorntail:
+
+- config map file is named "app-config.yml"
+- port is 8080 by default and can be overriden with http.port env
+
+CLI for config:
+- oc create configmap inventory --from-file=./app-config.yml
+- oc set volume dc/inventory --add --configmap-name=inventory --mount-path=/deployments/config
