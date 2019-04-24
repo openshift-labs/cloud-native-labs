@@ -1,4 +1,0 @@
-driverClassName: org.h2.jdbcx.JdbcDataSource
-jdbcUrl: jdbc:h2:mem:fruits;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-principal: sa
-credential: sa
