@@ -6,3 +6,23 @@
 CLI for config:
 - oc create configmap inventory --from-file=./app-config.yml
 - oc set volume dc/inventory --add --configmap-name=inventory --mount-path=/deployments/config
+
+
+```
+docker run -p 8080:8080 -v $(pwd):/app-data -e CONTENT_URL_PREFIX="file:///app-data" -e WORKSHOPS_URLS="file:///app-data/_cloud-native-workshop-rhsummit-vertx.yml"  -e OPENSHIFT_CONSOLE_URL="https://master.nantes-60eb.openshiftworkshop.com/"  -e APPS_SUFFIX="apps.nantes-8846.openshiftworkshop.com" -e DEBUG_LAB_HOSTNAME="MY_HOSTNAME" -e LABS_DOWNLOAD_URL="https://github.com/mcouliba/cloud-native-labs/archive/devoxxfr.zip" -e CODEREADY_WORKSPACES_URL="http://codeready-lab-infra.apps.nantes-60eb.openshiftworkshop.com " -e OPENSHIFT_USER=userX -e OPENSHIFT_PASWORD=openshift -e KIALI_URL="https://kiali-infraX.apps.nantes-60eb.openshiftworkshop.com" -e COOLSTORE_TEMPLATE=https://raw.githubusercontent.com/dwojciec/debugging-lab-summit-2019/master/openshift/coolstore.yml osevg/workshopper:latest
+```
+
+
+Voilà @Julien Viet , le lab est en cours de deploiement:
+- OCP: https://master.2672.summit.opentlc.com/console/project/lab-infra/overview  user: admin/r3dh4t1!
+- Les guides sont ici: http://guides-codeready-lab-infra.apps.2672.summit.opentlc.com/workshop/cloudnative/lab/getting-started-codeready
+- CodeReady Workspaces: http://codeready-lab-infra.apps.2672.summit.opentlc.com
+
+r3dh4t1!
+openshift
+
+user: user50
+
+Guide todo:
+- Getting Started: 
+  - "Repeat the above for inventory-thorntail and gateway-vertx projects." -> "Repeat the above for inventory-vertx and gateway-vertx projects."

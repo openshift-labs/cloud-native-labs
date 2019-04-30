@@ -144,7 +144,7 @@
         </executions>
         <configuration>
           <redeploy>true</redeploy>
-          <jvmArgs>-Djava.net.preferIPv4Stack=true</jvmArgs>
+          <jvmArgs>-Djava.net.preferIPv4Stack=true -Dhttp.port=9001</jvmArgs>
         </configuration>
       </plugin>
       <plugin>
