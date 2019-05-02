@@ -67,8 +67,8 @@ public class GatewayVerticle extends AbstractVerticle {
         // Retrieve catalog
         catalog
             .get("/api/catalog")
-            .as(BodyCodec.jsonArray())
             .expect(ResponsePredicate.SC_OK)
+            .as(BodyCodec.jsonArray())
             .rxSend()
             .map(resp -> {
                 // Map the response to a list of JSON object
@@ -79,11 +79,11 @@ public class GatewayVerticle extends AbstractVerticle {
                 return listOfProducts;
             })
             .flatMap(products -> {
-                // For each item from the catalog, invoke the inventory service
-                // and create a JsonArray containing all the results
-                return Observable.fromIterable(products)
-                    .flatMapSingle(this::getAvailabilityFromInventory)
-                    .collect(JsonArray::new, JsonArray::add);
+                    // For each item from the catalog, invoke the inventory service
+                    // and create a JsonArray containing all the results
+                    return Observable.fromIterable(products)
+                        .flatMapSingle(this::getAvailabilityFromInventory)
+                        .collect(JsonArray::new, JsonArray::add);
                 }
             )
             .subscribe(
@@ -96,19 +96,16 @@ public class GatewayVerticle extends AbstractVerticle {
         // Retrieve the inventory for a given product
         return inventory
             .get("/api/inventory/" + product.getString("itemId"))
+            .expect(ResponsePredicate.SC_OK)
             .as(BodyCodec.jsonObject())
             .rxSend()
-            .map(resp -> {
-                JsonObject json = product.copy();
-                if (resp.statusCode() != 200) {
-                    LOG.warn("Inventory error for {}: status code {}",
-                        product.getString("itemId"), resp.statusCode());
-                } else {
-                    json.put("availability",
-                        new JsonObject()
-                            .put("quantity", resp.body().getInteger("quantity")));
-                }
-                return json;
+            .map(resp -> product.copy()
+                .put("availability",
+                    new JsonObject()
+                        .put("quantity", resp.body().getInteger("quantity"))))
+            .onErrorReturn(err -> {
+                LOG.warn("Inventory error for {}: status code {}", product.getString("itemId"), err);
+                return product.copy();
             });
     }
 }
