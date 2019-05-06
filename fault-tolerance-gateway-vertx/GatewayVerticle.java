@@ -44,7 +44,7 @@ public class GatewayVerticle extends AbstractVerticle {
 
         Router router = Router.router(vertx);
         router.route().handler(CorsHandler.create("*").allowedMethod(HttpMethod.GET));
-        router.get("/").handler(StaticHandler.create("assets"));
+        router.get("/*").handler(StaticHandler.create("assets"));
         router.get("/health").handler(ctx -> ctx.response().end(new JsonObject().put("status", "UP").toString()));
         router.get("/api/products").handler(this::products);
 
