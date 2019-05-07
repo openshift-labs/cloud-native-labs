@@ -116,13 +116,16 @@ public class GatewayVerticle extends AbstractVerticle {
         // Retrieve the inventory for a given product
         return inventory
             .get("/api/inventory/" + product.getString("itemId"))
-            .expect(ResponsePredicate.SC_OK)
             .as(BodyCodec.jsonObject())
             .rxSend()
-            .map(resp -> product.copy()
-                .put("availability",
-                    new JsonObject()
-                        .put("quantity", resp.body().getInteger("quantity"))));
+            .map(resp -> {
+                if (resp.statusCode() != 200) {
+                    LOG.warn("Inventory error for {}: status code {}",
+                        product.getString("itemId"), resp.statusCode());
+                    return product.copy();
+                }
+                return product.copy().put("availability",
+                    new JsonObject().put("quantity", resp.body().getInteger("quantity")));
+            });
     }
 }
-
