@@ -1,9 +1,11 @@
 package com.redhat.cloudnative.gateway;
 
+import io.vertx.circuitbreaker.CircuitBreakerOptions;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.WebClientOptions;
+import io.vertx.reactivex.circuitbreaker.CircuitBreaker;
 import io.vertx.reactivex.core.AbstractVerticle;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
@@ -27,9 +29,19 @@ public class GatewayVerticle extends AbstractVerticle {
 
     private WebClient catalog;
     private WebClient inventory;
+    private CircuitBreaker circuit;
 
     @Override
     public void start() {
+
+        circuit = CircuitBreaker.create("inventory-circuit-breaker", vertx,
+            new CircuitBreakerOptions()
+                .setFallbackOnFailure(true)
+                .setMaxFailures(3)
+                .setResetTimeout(5000)
+                .setTimeout(1000)
+        );
+
         Router router = Router.router(vertx);
         router.route().handler(CorsHandler.create("*").allowedMethod(HttpMethod.GET));
         router.get("/*").handler(StaticHandler.create("assets"));
@@ -82,7 +94,15 @@ public class GatewayVerticle extends AbstractVerticle {
                     // For each item from the catalog, invoke the inventory service
                     // and create a JsonArray containing all the results
                     return Observable.fromIterable(products)
-                        .flatMapSingle(this::getAvailabilityFromInventory)
+                        .flatMapSingle(product ->
+                            circuit.rxExecuteCommandWithFallback(
+                                future ->
+                                    getAvailabilityFromInventory(product).subscribe(future::complete, future::fail),
+                                error -> {
+                                    LOG.warn("Inventory error for {}: status code {}", product.getString("itemId"), error);
+                                    return product.copy();
+                                })
+                        )
                         .collect(JsonArray::new, JsonArray::add);
                 }
             )
