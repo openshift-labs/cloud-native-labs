@@ -1,0 +1,14 @@
+target/
+*.iml
+*.log
+*.class
+tmp/
+.idea/
+.openshiftio
+.settings/
+.classpath
+.project
+.DS_Store
+.vscode
+bower_components/
+node_modules/
