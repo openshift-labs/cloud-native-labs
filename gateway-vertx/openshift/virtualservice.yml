@@ -1,0 +1,21 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: gateway-COOLSTORE_PROJECT
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - istio-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /COOLSTORE_PROJECT/api
+    rewrite:
+      uri: "/api"
+    route:
+    - destination:
+        port:
+          number: 8080
+        host: gateway
