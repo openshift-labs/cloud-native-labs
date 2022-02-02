@@ -14,7 +14,7 @@
     <fabric8.version>3.0.12</fabric8.version>
     <fabric8.maven.plugin.version>3.5.40</fabric8.maven.plugin.version>
     <h2.version>1.4.187</h2.version>
-    <postgresql.version>42.2.4</postgresql.version>
+    <postgresql.version>42.2.25</postgresql.version>
     <failOnMissingWebXml>false</failOnMissingWebXml>
   </properties>
   <repositories>
